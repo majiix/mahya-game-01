@@ -9,13 +9,26 @@
     <meta property="og:description" content="بازی سه‌بعدی ماینکرفت در جنگل کره جنوبی با امکان خانه‌سازی، خراب کردن دیوارها، پرواز جت‌پک و رانندگی." />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23ff5e99'/%3E%3Ctext x='32' y='44' font-size='34' text-anchor='middle'%3E%F0%9F%8C%B8%3C/text%3E%3C/svg%3E"
+    />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.187.0/examples/jsm/"
+        }
+      }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Vazirmatn:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
     <div id="game-shell" class="game-shell">
@@ -26,7 +39,7 @@
       <section id="title-screen" class="title-screen" aria-label="صفحه عنوان بازی">
         <div class="title-backdrop">
           <img
-            src="/src/assets/images/cg_romantic_hug_1795020944514.jpg"
+            src="./src/assets/images/cg_romantic_hug_1795020944514.jpg"
             alt="مین‌جی و جون‌هو در جنگل ساکورا"
             class="title-key-art"
             referrerpolicy="no-referrer"
@@ -62,7 +75,7 @@
       <header id="top-hud" class="top-hud hidden">
         <div class="hud-cluster hud-player-card">
           <button id="btn-switch-char" class="char-avatar-btn" type="button" title="تعویض شخصیت">
-            <img id="hud-char-avatar" src="/src/assets/images/minji_disguise_suit_1795020940472.jpg" alt="آواتار شخصیت" />
+            <img id="hud-char-avatar" src="./src/assets/images/minji_disguise_suit_1795020940472.jpg" alt="آواتار شخصیت" />
             <span class="char-switch-tag">تعویض</span>
           </button>
 
@@ -228,6 +241,6 @@
       <div id="toast-banner" class="toast-banner hidden" role="status" aria-live="polite"></div>
     </div>
 
-    <script type="module" src="/game.js"></script>
+    <script type="module" src="./game.js"></script>
   </body>
 </html>

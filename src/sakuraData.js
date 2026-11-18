@@ -1,15 +1,15 @@
 export const ASSET_PORTRAITS = {
-  minji_disguise: '/src/assets/images/minji_disguise_suit_1795020940472.jpg',
-  minji_casual: '/src/assets/images/minji_casual_hoodie_1795020938960.jpg',
-  minji_pink: '/src/assets/images/minji_pink_sweater_1795020938838.jpg',
-  joonho_pink: '/src/assets/images/joonho_pink_sweater_1795020941077.jpg',
-  joonho_tuxedo: '/src/assets/images/joonho_ceo_tuxedo_1795020940044.jpg',
-  joonho_wedding: '/src/assets/images/joonho_wedding_suit_1795020940292.jpg',
-  hug_cg: '/src/assets/images/cg_romantic_hug_1795020944514.jpg',
-  sports_car: '/src/assets/images/luxury_sports_car_1795020943184.jpg',
-  bg_seoul: '/src/assets/images/bg_seoul_plaza_1795020941151.jpg',
-  bg_mansion: '/src/assets/images/bg_luxury_mansion_1795020941571.jpg',
-  bg_busan: '/src/assets/images/bg_busan_wedding_garden_1795020943672.jpg',
+  minji_disguise: './src/assets/images/minji_disguise_suit_1795020940472.jpg',
+  minji_casual: './src/assets/images/minji_casual_hoodie_1795020938960.jpg',
+  minji_pink: './src/assets/images/minji_pink_sweater_1795020938838.jpg',
+  joonho_pink: './src/assets/images/joonho_pink_sweater_1795020941077.jpg',
+  joonho_tuxedo: './src/assets/images/joonho_ceo_tuxedo_1795020940044.jpg',
+  joonho_wedding: './src/assets/images/joonho_wedding_suit_1795020940292.jpg',
+  hug_cg: './src/assets/images/cg_romantic_hug_1795020944514.jpg',
+  sports_car: './src/assets/images/luxury_sports_car_1795020943184.jpg',
+  bg_seoul: './src/assets/images/bg_seoul_plaza_1795020941151.jpg',
+  bg_mansion: './src/assets/images/bg_luxury_mansion_1795020941571.jpg',
+  bg_busan: './src/assets/images/bg_busan_wedding_garden_1795020943672.jpg',
 };
 
 export function toFaNum(val) {
