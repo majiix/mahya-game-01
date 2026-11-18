@@ -1,0 +1,6 @@
+{
+  "name": "Love in Disguise (عشق در لباس مبدل)",
+  "description": "A 2D Korean anime visual novel, city hub, dress-up, mansion decor, and mini-game adventure.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

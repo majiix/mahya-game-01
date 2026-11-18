@@ -1,0 +1,932 @@
+:root {
+  --pink-500: #ff5e99;
+  --pink-600: #e63b7a;
+  --plum-900: #24192a;
+  --surface-light: rgba(255, 250, 253, 0.94);
+  --surface-dark: rgba(30, 24, 34, 0.92);
+  --border-rose: rgba(255, 132, 180, 0.45);
+  --shadow-soft: 0 10px 26px rgba(22, 12, 28, 0.25);
+}
+
+* {
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Vazirmatn', system-ui, sans-serif;
+  background: #1b281e;
+  color: var(--plum-900);
+}
+
+.hidden {
+  display: none !important;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.game-shell {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.webgl-mount {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+/* صفحه عنوان بازی */
+.title-screen {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.title-backdrop {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.title-key-art {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 22%;
+}
+
+.title-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(145deg, rgba(22, 42, 26, 0.85) 0%, rgba(74, 34, 62, 0.72) 55%, rgba(20, 24, 34, 0.9) 100%);
+}
+
+.title-content {
+  position: relative;
+  z-index: 2;
+  max-width: 680px;
+  width: 100%;
+  padding: 28px 26px;
+  border-radius: 22px;
+  background: rgba(255, 249, 252, 0.95);
+  border: 3px solid #6b9e4b;
+  box-shadow: 0 24px 60px rgba(10, 18, 12, 0.5);
+  text-align: center;
+}
+
+.title-lockup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.title-badge-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #5ea83c, #8b5a36);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  border: 2px solid #ffffff;
+  box-shadow: 0 8px 18px rgba(62, 114, 42, 0.35);
+}
+
+.title-kicker {
+  margin: 0;
+  font-size: 0.86rem;
+  font-weight: 800;
+  color: #3f7a25;
+}
+
+.title-main {
+  margin: 2px 0 0;
+  font-size: clamp(1.65rem, 3.6vw, 2.3rem);
+  font-weight: 800;
+  color: var(--plum-900);
+}
+
+.title-synopsis {
+  margin: 0 0 20px;
+  line-height: 1.85;
+  font-size: 0.94rem;
+  color: #3b2d40;
+}
+
+.title-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.btn-primary-cta,
+.btn-secondary-cta {
+  border: none;
+  border-radius: 14px;
+  padding: 13px 26px;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.btn-primary-cta {
+  background: linear-gradient(135deg, #5ea83c, #3b7d23);
+  color: #ffffff;
+  box-shadow: 0 8px 20px rgba(62, 130, 38, 0.4);
+}
+
+.btn-secondary-cta {
+  background: #ffffff;
+  color: #3b7d23;
+  border: 2px solid #5ea83c;
+}
+
+.title-hint {
+  margin: 0;
+  font-size: 0.78rem;
+  color: #5a4661;
+  line-height: 1.65;
+}
+
+/* نوار وضعیت بالا (بدون backdrop-filter) */
+.top-hud {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  z-index: 20;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.hud-cluster,
+.hud-menu-dock {
+  pointer-events: auto;
+}
+
+.hud-player-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 16px;
+  background: var(--surface-light);
+  border: 2px solid rgba(94, 168, 60, 0.55);
+  box-shadow: var(--shadow-soft);
+}
+
+.char-avatar-btn {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  padding: 0;
+  border: 2px solid var(--pink-500);
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  background: #fff;
+  flex-shrink: 0;
+}
+
+.char-avatar-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.char-switch-tag {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(36, 25, 42, 0.85);
+  color: #fff;
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 1px 0;
+}
+
+.player-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 142px;
+}
+
+.player-name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.84rem;
+}
+
+.zone-pill {
+  font-size: 0.66rem;
+  font-weight: 700;
+  background: #e5f5dc;
+  color: #2f6b1b;
+  padding: 2px 7px;
+  border-radius: 8px;
+}
+
+.mini-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.68rem;
+}
+
+.bar-label {
+  width: 34px;
+  color: #4f3d56;
+  font-weight: 600;
+}
+
+.bar-track {
+  flex: 1;
+  height: 7px;
+  border-radius: 4px;
+  background: #e2dce5;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  transition: width 0.14s ease;
+}
+
+.hp-fill {
+  background: linear-gradient(90deg, #ef4444, #fb7185);
+}
+
+.fuel-fill {
+  background: linear-gradient(90deg, #0ea5e9, #38bdf8);
+}
+
+.bar-val {
+  width: 24px;
+  text-align: left;
+  font-weight: 700;
+}
+
+.hud-counters {
+  display: flex;
+  gap: 6px;
+}
+
+.counter-box {
+  background: #f5fbf0;
+  border: 1px solid rgba(94, 168, 60, 0.4);
+  border-radius: 10px;
+  padding: 4px 8px;
+  text-align: center;
+  min-width: 50px;
+}
+
+.love-box {
+  background: #ffeef5;
+  border-color: rgba(255, 94, 153, 0.4);
+}
+
+.counter-lbl {
+  display: block;
+  font-size: 0.63rem;
+  color: #5f4b66;
+}
+
+.counter-num {
+  font-size: 0.85rem;
+  color: var(--pink-600);
+}
+
+.hud-menu-dock {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+  max-width: 560px;
+}
+
+.sakura-top-btn {
+  position: relative;
+  border: 1.5px solid rgba(94, 168, 60, 0.45);
+  background: var(--surface-light);
+  color: var(--plum-900);
+  border-radius: 11px;
+  padding: 7px 11px;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(22, 12, 28, 0.16);
+}
+
+.sakura-top-btn:hover {
+  background: #ffffff;
+}
+
+.primary-menu-btn {
+  background: linear-gradient(135deg, #5ea83c, #3f7a25);
+  color: #ffffff;
+  border-color: #ffffff;
+}
+
+.badge-count {
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: #ef4444;
+  color: #fff;
+  font-size: 0.66rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+}
+
+/* نوار بلوک‌ها و ابزارهای ساخت ماینکرفت پایین وسط */
+.minecraft-hotbar {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 22;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  max-width: calc(100vw - 380px);
+}
+
+.hotbar-tools-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  background: var(--surface-dark);
+  color: #ffffff;
+  padding: 5px 9px;
+  border-radius: 10px;
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  font-size: 0.72rem;
+}
+
+.build-tool-pills {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.build-tool-pill {
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #e5e7eb;
+  font-family: inherit;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 7px;
+  cursor: pointer;
+}
+
+.build-tool-pill.active {
+  background: #fde047;
+  color: #1f2937;
+  border-color: #ffffff;
+}
+
+.tool-util-btn {
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 7px;
+  background: #334155;
+  color: #f8fafc;
+  font-family: inherit;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  cursor: pointer;
+}
+
+.tool-util-btn:hover {
+  background: #475569;
+}
+
+.click-mode-btn {
+  border: none;
+  border-radius: 7px;
+  background: #5ea83c;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  cursor: pointer;
+}
+
+.click-mode-btn.build-active {
+  background: #d97706;
+}
+
+.target-block-label {
+  color: #fde68a;
+  font-weight: 600;
+}
+
+.hotbar-slots {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(32, 34, 42, 0.92);
+  border: 2.5px solid #6b7280;
+  border-radius: 10px;
+  padding: 4px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.hotbar-slot {
+  position: relative;
+  width: 46px;
+  height: 48px;
+  flex-shrink: 0;
+  border: 2px solid #4b5563;
+  border-radius: 6px;
+  background: rgba(55, 65, 81, 0.85);
+  color: #ffffff;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 2px;
+  font-family: inherit;
+}
+
+.hotbar-slot.selected {
+  border-color: #fde047;
+  background: rgba(94, 168, 60, 0.42);
+  transform: translateY(-2px);
+}
+
+.slot-swatch {
+  width: 22px;
+  height: 22px;
+  border-radius: 3px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  image-rendering: pixelated;
+}
+
+.slot-name {
+  font-size: 0.54rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 42px;
+}
+
+.slot-num {
+  position: absolute;
+  top: 1px;
+  right: 3px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.54rem;
+  color: #d1d5db;
+}
+
+/* جوی‌استیک */
+.joystick-zone {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  touch-action: none;
+}
+
+.joystick-base {
+  position: relative;
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  background: rgba(255, 250, 253, 0.78);
+  border: 2.5px solid #5ea83c;
+  box-shadow: 0 8px 22px rgba(15, 24, 15, 0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.joystick-knob {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #5ea83c, #3b7d23);
+  border: 2px solid #ffffff;
+  transform: translate(0px, 0px);
+  pointer-events: none;
+}
+
+.joystick-caption {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #ffffff;
+  background: rgba(30, 24, 34, 0.8);
+  padding: 2px 10px;
+  border-radius: 8px;
+}
+
+/* خوشه دکمه‌های اکشن */
+.action-cluster {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.context-prompt-btn {
+  border: 2px solid #ffffff;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: #24192a;
+  border-radius: 12px;
+  padding: 8px 14px;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.sakura-action-pad {
+  display: grid;
+  grid-template-columns: repeat(2, 102px);
+  gap: 7px;
+}
+
+.sakura-pad-btn {
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  border-radius: 13px;
+  padding: 8px 6px;
+  color: #ffffff;
+  font-family: inherit;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  box-shadow: 0 6px 16px rgba(15, 10, 20, 0.3);
+}
+
+.sakura-pad-btn:active {
+  transform: scale(0.95);
+}
+
+.pad-stone {
+  background: linear-gradient(135deg, #64748b, #475569);
+}
+.pad-wood {
+  background: linear-gradient(135deg, #b45309, #92400e);
+}
+.pad-sky {
+  background: linear-gradient(135deg, #0ea5e9, #2563eb);
+}
+.pad-gold {
+  background: linear-gradient(135deg, #f59e0b, #ea580c);
+}
+.pad-red {
+  background: linear-gradient(135deg, #ef4444, #be123c);
+}
+.pad-rose {
+  background: linear-gradient(135deg, #ec4899, #db2777);
+}
+
+.pad-title {
+  font-size: 0.74rem;
+  font-weight: 800;
+}
+
+.pad-key {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  opacity: 0.9;
+}
+
+/* نوار خودرو */
+.vehicle-hud-bar {
+  position: absolute;
+  bottom: 112px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 22;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--surface-dark);
+  color: #ffffff;
+  border: 1.5px solid rgba(255, 132, 180, 0.5);
+  border-radius: 14px;
+  padding: 7px 14px;
+  font-size: 0.82rem;
+}
+
+.exit-vehicle-btn {
+  border: none;
+  border-radius: 8px;
+  background: #ff5e99;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 5px 11px;
+  cursor: pointer;
+}
+
+/* پنل تعامل اجتماعی */
+.npc-social-card {
+  position: absolute;
+  bottom: 128px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 25;
+  width: min(460px, calc(100vw - 32px));
+  background: var(--surface-light);
+  border: 2px solid var(--border-rose);
+  border-radius: 18px;
+  padding: 13px 15px;
+  box-shadow: 0 18px 40px rgba(20, 10, 28, 0.34);
+}
+
+.social-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.social-tier-tag {
+  display: inline-block;
+  margin-right: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--pink-600);
+  background: #ffe4ef;
+  padding: 2px 8px;
+  border-radius: 8px;
+}
+
+.social-close-btn {
+  border: none;
+  border-radius: 8px;
+  background: #ede9ef;
+  color: var(--plum-900);
+  font-family: inherit;
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+
+.social-npc-line {
+  margin: 0 0 10px;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: #36273d;
+  background: #fff6fa;
+  border-radius: 10px;
+  padding: 8px 11px;
+  border: 1px solid rgba(255, 132, 180, 0.3);
+}
+
+.social-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+.soc-btn {
+  border: none;
+  border-radius: 10px;
+  padding: 7px 6px;
+  font-family: inherit;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.soc-sky { background: #0284c7; }
+.soc-mint { background: #059669; }
+.soc-rose { background: #e11d48; }
+.soc-gold { background: #d97706; }
+.soc-purple { background: #7c3aed; }
+.soc-red { background: #dc2626; }
+
+/* مودال‌ها */
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  background: rgba(18, 12, 24, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.modal-container {
+  width: min(760px, 100%);
+  max-height: 86vh;
+  background: #fffafc;
+  border: 2px solid #5ea83c;
+  border-radius: 20px;
+  box-shadow: 0 24px 60px rgba(10, 8, 16, 0.45);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 18px;
+  background: linear-gradient(135deg, #eff8ea, #ffe8f2);
+  border-bottom: 1.5px solid rgba(94, 168, 60, 0.3);
+}
+
+.modal-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.modal-close-btn {
+  border: none;
+  border-radius: 10px;
+  background: var(--plum-900);
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  cursor: pointer;
+}
+
+.modal-body {
+  padding: 16px 18px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.modal-section-title {
+  margin: 0 0 8px;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #2f6b1b;
+}
+
+.modal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
+  gap: 10px;
+}
+
+.modal-card {
+  background: #ffffff;
+  border: 1.5px solid #dce8d6;
+  border-radius: 13px;
+  padding: 11px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.modal-card.active-card {
+  border-color: #5ea83c;
+  background: #f2f9ee;
+}
+
+.modal-card h4 {
+  margin: 0;
+  font-size: 0.88rem;
+}
+
+.modal-card p {
+  margin: 0;
+  font-size: 0.76rem;
+  color: #4f4254;
+  line-height: 1.55;
+}
+
+.card-btn {
+  margin-top: auto;
+  border: none;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #5ea83c, #3b7d23);
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 7px 10px;
+  cursor: pointer;
+}
+
+.card-btn.secondary {
+  background: #ece8ee;
+  color: var(--plum-900);
+}
+
+.album-img {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  border-radius: 9px;
+  border: 1px solid #dce8d6;
+}
+
+.toast-banner {
+  position: absolute;
+  top: 84px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 60;
+  background: var(--surface-dark);
+  color: #ffffff;
+  border: 1.5px solid #86efac;
+  border-radius: 12px;
+  padding: 8px 16px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  pointer-events: none;
+}
+
+@media (max-width: 860px) {
+  .top-hud {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hud-menu-dock {
+    max-width: 100%;
+    justify-content: flex-start;
+  }
+
+  .minecraft-hotbar {
+    bottom: 140px;
+    max-width: 96vw;
+  }
+
+  .hotbar-slots {
+    overflow-x: auto;
+    max-width: 94vw;
+  }
+
+  .sakura-action-pad {
+    grid-template-columns: repeat(2, 90px);
+  }
+}

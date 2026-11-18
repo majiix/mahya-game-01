@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>عشق در لباس مبدل · دنیای ماینکرفت کره جنوبی</title>
+    <meta name="description" content="بازی سه‌بعدی ماینکرفت در جنگل کره جنوبی با امکان خانه‌سازی، خراب کردن دیوارها، پرواز جت‌پک و رانندگی." />
+    <meta property="og:title" content="عشق در لباس مبدل · دنیای ماینکرفت کره جنوبی" />
+    <meta property="og:description" content="بازی سه‌بعدی ماینکرفت در جنگل کره جنوبی با امکان خانه‌سازی، خراب کردن دیوارها، پرواز جت‌پک و رانندگی." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Vazirmatn:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div id="game-shell" class="game-shell">
+      <!-- ظرف سه‌بعدی WebGL ماینکرفت -->
+      <div id="webgl-mount" class="webgl-mount" aria-label="دنیای واکسلی جنگل کره جنوبی"></div>
+
+      <!-- صفحه عنوان بازی -->
+      <section id="title-screen" class="title-screen" aria-label="صفحه عنوان بازی">
+        <div class="title-backdrop">
+          <img
+            src="/src/assets/images/cg_romantic_hug_1795020944514.jpg"
+            alt="مین‌جی و جون‌هو در جنگل ساکورا"
+            class="title-key-art"
+            referrerpolicy="no-referrer"
+          />
+          <div class="title-scrim"></div>
+        </div>
+
+        <div class="title-content">
+          <div class="title-lockup">
+            <div class="title-badge-icon" aria-hidden="true">🧱</div>
+            <div class="title-text-group">
+              <p class="title-kicker">دنیای بلوکی ماینکرفت · جنگل کره جنوبی</p>
+              <h1 class="title-main">عشق در لباس مبدل</h1>
+            </div>
+          </div>
+
+          <p class="title-synopsis">
+            در جنگل سرسبز و بلوکی کره جنوبی قدم بزنید! تمام دیوارها، درختان کاج و شکوفه‌های ساکورا قابل خراب کردن هستند و می‌توانید با چوب هانوک، سنگ کره‌ای، شیشه و سقف گیوا خانه و قلعه خودتان را بسازید، با جت‌پک پرواز کنید و سوار ماشین و هلیکوپتر شوید!
+          </p>
+
+          <div class="title-actions">
+            <button id="btn-start-new" class="btn-primary-cta" type="button">ورود به جنگل کره جنوبی</button>
+            <button id="btn-continue-save" class="btn-secondary-cta hidden" type="button">ادامه بازی ذخیره‌شده</button>
+          </div>
+
+          <p class="title-hint">
+            حرکت: جوی‌استیک یا WASD · کندن دیوار: کلیک چپ یا Q · ساخت بلوک: کلیک راست یا R · بازگردانی: Z · تغییر بلوک: ۱ تا ۹ و ۰ و - و = · جت‌پک: Space · سوار ماشین: C
+          </p>
+        </div>
+      </section>
+
+      <!-- نوار وضعیت بالا -->
+      <header id="top-hud" class="top-hud hidden">
+        <div class="hud-cluster hud-player-card">
+          <button id="btn-switch-char" class="char-avatar-btn" type="button" title="تعویض شخصیت">
+            <img id="hud-char-avatar" src="/src/assets/images/minji_disguise_suit_1795020940472.jpg" alt="آواتار شخصیت" />
+            <span class="char-switch-tag">تعویض</span>
+          </button>
+
+          <div class="player-bars">
+            <div class="player-name-row">
+              <strong id="hud-char-name">مین‌جی</strong>
+              <span id="hud-zone-pill" class="zone-pill">جنگل کره جنوبی</span>
+            </div>
+
+            <div class="mini-bar-row">
+              <span class="bar-label">سلامتی</span>
+              <div class="bar-track">
+                <div id="hud-hp-fill" class="bar-fill hp-fill" style="width: 100%"></div>
+              </div>
+              <span id="hud-hp-val" class="bar-val tabular-nums">۱۰۰</span>
+            </div>
+
+            <div class="mini-bar-row">
+              <span class="bar-label">جت‌پک</span>
+              <div class="bar-track">
+                <div id="hud-fuel-fill" class="bar-fill fuel-fill" style="width: 100%"></div>
+              </div>
+              <span id="hud-fuel-val" class="bar-val tabular-nums">۱۰۰</span>
+            </div>
+          </div>
+
+          <div class="hud-counters">
+            <div class="counter-box">
+              <span class="counter-lbl">سکه</span>
+              <strong id="hud-coins-val" class="counter-num tabular-nums">۲۶۰</strong>
+            </div>
+            <div class="counter-box love-box">
+              <span class="counter-lbl">عشق</span>
+              <strong id="hud-love-val" class="counter-num tabular-nums">۳۵٪</strong>
+            </div>
+          </div>
+        </div>
+
+        <nav class="hud-menu-dock" aria-label="منوی اصلی">
+          <button id="btn-menu" class="sakura-top-btn primary-menu-btn" type="button">
+            <span>منو و نقشه</span>
+          </button>
+          <button id="btn-charamake" class="sakura-top-btn" type="button">
+            <span>لباس و بال</span>
+          </button>
+          <button id="btn-props" class="sakura-top-btn" type="button">
+            <span>ساخت خانه و اشیا</span>
+          </button>
+          <button id="btn-phone" class="sakura-top-btn" type="button">
+            <span>گوشی</span>
+            <span id="phone-badge" class="badge-count">۲</span>
+          </button>
+          <button id="btn-snap" class="sakura-top-btn" type="button">
+            <span>ثبت عکس</span>
+          </button>
+          <button id="btn-album" class="sakura-top-btn" type="button">
+            <span>آلبوم</span>
+          </button>
+          <button id="btn-camera-reset" class="sakura-top-btn" type="button">
+            <span>دوربین</span>
+          </button>
+          <button id="btn-sound" class="sakura-top-btn" type="button">
+            <span id="sound-label">صدا: روشن</span>
+          </button>
+        </nav>
+      </header>
+
+      <!-- پنل تعامل اجتماعی -->
+      <section id="npc-social-card" class="npc-social-card hidden" aria-label="گفتگو و کنش اجتماعی">
+        <div class="social-card-head">
+          <div>
+            <strong id="social-npc-name">مدیرعامل جون‌هو</strong>
+            <span id="social-npc-tier" class="social-tier-tag">دوست · ۳۵٪</span>
+          </div>
+          <button id="btn-close-social" class="social-close-btn" type="button">بستن</button>
+        </div>
+        <p id="social-npc-line" class="social-npc-line"></p>
+        <div class="social-actions-grid">
+          <button id="soc-talk" class="soc-btn soc-sky" type="button">گفتگو</button>
+          <button id="soc-praise" class="soc-btn soc-mint" type="button">تعریف (+دوستی)</button>
+          <button id="soc-hug" class="soc-btn soc-rose" type="button">بغل (+عشق)</button>
+          <button id="soc-gift" class="soc-btn soc-gold" type="button">هدیه دادن</button>
+          <button id="soc-follow" class="soc-btn soc-purple" type="button">بیا دنبالم</button>
+          <button id="soc-attack" class="soc-btn soc-red" type="button">مبارزه!</button>
+        </div>
+      </section>
+
+      <!-- جوی‌استیک حرکت (پایین چپ) -->
+      <div id="joystick-zone" class="joystick-zone hidden" aria-label="دسته حرکت">
+        <div class="joystick-base">
+          <div id="joystick-knob" class="joystick-knob"></div>
+        </div>
+        <span class="joystick-caption">حرکت</span>
+      </div>
+
+      <!-- نوار بلوک‌ها و ابزارهای حرفه‌ای ساخت‌وساز ماینکرفت (پایین وسط) -->
+      <div id="minecraft-hotbar" class="minecraft-hotbar hidden" aria-label="ابزارهای ساخت خانه">
+        <div class="hotbar-tools-row">
+          <button id="btn-click-mode" class="click-mode-btn" type="button">
+            حالت کلیک: <strong id="click-mode-label">کندن دیوار</strong>
+          </button>
+          <div id="build-tool-pills" class="build-tool-pills"></div>
+          <button id="btn-undo-build" class="tool-util-btn" type="button" title="بازگردانی آخرین تغییر (Z)">بازگردانی (Z)</button>
+          <button id="btn-all-blocks" class="tool-util-btn" type="button" title="انتخاب مصالح بیشتر">مصالح +</button>
+          <span id="target-block-label" class="target-block-label">نشانه: آماده</span>
+        </div>
+        <div id="hotbar-slots" class="hotbar-slots"></div>
+      </div>
+
+      <!-- خوشه دکمه‌های اکشن (پایین راست) -->
+      <div id="action-cluster" class="action-cluster hidden">
+        <button id="context-prompt-btn" class="context-prompt-btn hidden" type="button">
+          تعامل (E)
+        </button>
+
+        <div class="sakura-action-pad">
+          <button id="act-break" class="sakura-pad-btn pad-stone" type="button">
+            <span class="pad-title">کندن دیوار</span>
+            <span class="pad-key">Q / کلیک</span>
+          </button>
+          <button id="act-place" class="sakura-pad-btn pad-wood" type="button">
+            <span class="pad-title">ساخت بلوک</span>
+            <span class="pad-key">R / راست‌کلیک</span>
+          </button>
+          <button id="act-fly" class="sakura-pad-btn pad-sky" type="button">
+            <span class="pad-title">پرش / جت‌پک</span>
+            <span class="pad-key">Space</span>
+          </button>
+          <button id="act-interact" class="sakura-pad-btn pad-gold" type="button">
+            <span id="act-interact-label" class="pad-title">تعامل / سوار</span>
+            <span class="pad-key">E / C</span>
+          </button>
+          <button id="act-kick" class="sakura-pad-btn pad-red" type="button">
+            <span class="pad-title">لگد / حمله</span>
+            <span class="pad-key">X</span>
+          </button>
+          <button id="act-hug" class="sakura-pad-btn pad-rose" type="button">
+            <span class="pad-title">بغل / همراهی</span>
+            <span class="pad-key">H</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- نوار خودرو -->
+      <div id="vehicle-hud-bar" class="vehicle-hud-bar hidden">
+        <span id="vehicle-name-badge">خودروی اسپرت</span>
+        <span id="vehicle-speed-badge" class="tabular-nums">۰ کیلومتر</span>
+        <button id="btn-exit-vehicle" class="exit-vehicle-btn" type="button">پیاده شدن (C)</button>
+      </div>
+
+      <!-- مودال‌ها -->
+      <div id="modal-backdrop" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+        <div class="modal-container">
+          <div class="modal-header">
+            <h2 id="modal-title" class="modal-title">منو</h2>
+            <button id="modal-close" class="modal-close-btn" type="button">بستن</button>
+          </div>
+          <div id="modal-body" class="modal-body"></div>
+        </div>
+      </div>
+
+      <!-- پیام اعلان -->
+      <div id="toast-banner" class="toast-banner hidden" role="status" aria-live="polite"></div>
+    </div>
+
+    <script type="module" src="/game.js"></script>
+  </body>
+</html>
