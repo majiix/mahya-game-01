@@ -254,6 +254,36 @@ export function createVoxelTextures() {
       ctx.fillRect(0, 11, 16, 2);
     }, true),
 
+    underground_water: makePixelTex((ctx) => {
+      noisePixel(ctx, ['#0891b2', '#06b6d4', '#22d3ee', '#0e7490'], 37);
+      ctx.fillStyle = 'rgba(165, 243, 252, 0.72)';
+      ctx.fillRect(2, 3, 5, 2);
+      ctx.fillRect(9, 10, 5, 2);
+      ctx.fillRect(5, 13, 3, 1);
+    }, true),
+
+    lava: makePixelTex((ctx) => {
+      noisePixel(ctx, ['#dc2626', '#ea580c', '#f97316', '#991b1b'], 38);
+      ctx.fillStyle = '#fde047';
+      ctx.fillRect(2, 2, 4, 2);
+      ctx.fillRect(10, 6, 4, 3);
+      ctx.fillRect(4, 11, 5, 2);
+      ctx.fillStyle = '#fb923c';
+      ctx.fillRect(7, 3, 3, 3);
+      ctx.fillRect(1, 8, 3, 3);
+    }, true),
+
+    magma_rock: makePixelTex((ctx) => {
+      noisePixel(ctx, ['#1c1917', '#292524', '#18181b', '#3f3f46'], 39);
+      ctx.fillStyle = '#ea580c';
+      ctx.fillRect(3, 4, 4, 1);
+      ctx.fillRect(6, 5, 1, 4);
+      ctx.fillRect(10, 10, 4, 1);
+      ctx.fillStyle = '#fbbf24';
+      ctx.fillRect(6, 6, 1, 1);
+      ctx.fillRect(11, 10, 1, 1);
+    }),
+
     alien_metal: makePixelTex((ctx) => {
       noisePixel(ctx, ['#475569', '#334155', '#64748b'], 35);
       ctx.strokeStyle = '#38bdf8';

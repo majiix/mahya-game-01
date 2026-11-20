@@ -962,11 +962,39 @@ body {
   pointer-events: none;
 }
 
+.mat-filter-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.mat-filter-tab {
+  border: 1.5px solid #cbd5e1;
+  border-radius: 10px;
+  background: #ffffff;
+  color: var(--plum-900);
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.mat-filter-tab.active {
+  background: linear-gradient(135deg, #5ea83c, #3b7d23);
+  color: #ffffff;
+  border-color: #3b7d23;
+}
+
 @media (max-width: 860px) {
   .top-hud {
     flex-direction: column;
     align-items: stretch;
-    gap: 6px;
+    gap: 5px;
+    top: 6px;
+    left: 6px;
+    right: 6px;
   }
 
   .hud-player-card {
@@ -978,11 +1006,15 @@ body {
     max-width: 100%;
     justify-content: flex-start;
     gap: 4px;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 2px;
   }
 
   .sakura-top-btn {
     padding: 5px 8px;
     font-size: 0.7rem;
+    flex-shrink: 0;
   }
 
   .joystick-zone {
@@ -998,11 +1030,21 @@ body {
   .action-cluster {
     right: 10px;
     bottom: 10px;
+    gap: 5px;
+  }
+
+  .flight-mini-btn {
+    padding: 5px 8px;
+    font-size: 0.66rem;
   }
 
   .minecraft-hotbar {
-    bottom: 184px;
+    bottom: 196px;
     max-width: 96vw;
+  }
+
+  .minecraft-hotbar.collapsed {
+    bottom: 12px;
   }
 
   .hotbar-slots {
@@ -1011,7 +1053,7 @@ body {
   }
 
   .sakura-action-pad {
-    grid-template-columns: repeat(2, 84px);
+    grid-template-columns: repeat(2, 82px);
     gap: 5px;
   }
 
@@ -1020,6 +1062,10 @@ body {
   }
 
   .pad-title {
-    font-size: 0.67rem;
+    font-size: 0.66rem;
+  }
+
+  .pad-key {
+    font-size: 0.56rem;
   }
 }

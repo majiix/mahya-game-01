@@ -101,14 +101,14 @@ class KoreanForestMinecraftApp {
     this.joyVec = { x: 0, y: 0 };
     this.isFlyHeld = false;
     this.isDescendHeld = false;
-    this.camYaw = Math.PI;
-    this.camPitch = 0.36;
-    this.camDist = 9.2;
+    this.camYaw = 0;
+    this.camPitch = 0.28;
+    this.camDist = 7.8;
     this.isDraggingCam = false;
     this.camDragPointerId = null;
     this.activeMountPointers = new Map();
     this.pinchStartDist = null;
-    this.pinchStartCamDist = 9.2;
+    this.pinchStartCamDist = 7.8;
     this.pointerDownPos = { x: 0, y: 0 };
     this.lastPointer = { x: 0, y: 0 };
     this.pointerNdc = new THREE.Vector2(0, 0);
@@ -119,6 +119,7 @@ class KoreanForestMinecraftApp {
     this.playerState = {
       x: 0,
       y: 1,
+      visualY: 1,
       z: 7,
       vx: 0,
       vy: 0,
@@ -146,6 +147,9 @@ class KoreanForestMinecraftApp {
     this.targetVoxel = null;
     this.toastTimer = null;
     this.autoSaveTimer = 0;
+    this.isUndergroundScene = false;
+    this.lavaWarnCooldown = 0;
+    this.debouncedSaveTimer = null;
 
     this.interactiveZones = [
       {
@@ -231,6 +235,19 @@ class KoreanForestMinecraftApp {
     this.sunLight.shadow.bias = -0.0005;
     this.scene.add(this.sunLight);
     this.scene.add(this.sunLight.target);
+
+    // Underground / Night Soft Player Headlamp
+    this.headlampLight = new THREE.PointLight('#fff3d1', 0, 24, 1.35);
+    this.headlampLight.position.set(0, 2.5, 7);
+    this.scene.add(this.headlampLight);
+
+    // Distant Horizon Skirt (seamlessly hides render window boundary in expanded worlds)
+    const horizonGeo = new THREE.PlaneGeometry(760, 760);
+    const horizonMat = new THREE.MeshBasicMaterial({ color: '#5fa886' });
+    this.horizonSkirt = new THREE.Mesh(horizonGeo, horizonMat);
+    this.horizonSkirt.rotation.x = -Math.PI / 2;
+    this.horizonSkirt.position.y = -0.45;
+    this.scene.add(this.horizonSkirt);
 
     // Minecraft South Korean Forest World
     this.voxelWorld = new VoxelWorld(this.scene);
@@ -325,6 +342,7 @@ class KoreanForestMinecraftApp {
       this.hemiLight.color.set('#fed7aa');
       this.hemiLight.groundColor.set('#3b2847');
       this.hemiLight.intensity = 0.8;
+      if (this.horizonSkirt) this.horizonSkirt.material.color.set('#6b6f75');
     } else if (mode === 'night') {
       this.scene.background = new THREE.Color('#0f172a');
       this.scene.fog = new THREE.Fog('#0f172a', Math.round(fogNear * 0.72), Math.round(fogFar * 0.85));
@@ -333,6 +351,7 @@ class KoreanForestMinecraftApp {
       this.hemiLight.color.set('#6366f1');
       this.hemiLight.groundColor.set('#0f172a');
       this.hemiLight.intensity = 0.55;
+      if (this.horizonSkirt) this.horizonSkirt.material.color.set('#14233c');
     } else {
       this.scene.background = new THREE.Color('#a8dcff');
       this.scene.fog = new THREE.Fog('#a8dcff', fogNear, fogFar);
@@ -341,6 +360,7 @@ class KoreanForestMinecraftApp {
       this.hemiLight.color.set('#d9f2ff');
       this.hemiLight.groundColor.set('#4b5e3b');
       this.hemiLight.intensity = 0.92;
+      if (this.horizonSkirt) this.horizonSkirt.material.color.set('#5fa886');
     }
   }
 
@@ -501,6 +521,7 @@ class KoreanForestMinecraftApp {
       if (p.vehicle.type === 'heli' || p.vehicle.type === 'ufo') {
         p.hoverMode = !p.hoverMode;
         p.vehicle.vy = 0;
+        if (p.hoverMode) this.completeMission('m_hover');
         this.updateHoverButtonUI();
         sakuraAudio.playClick();
         this.showToast(p.hoverMode ? 'سفینه/هلیکوپتر در آسمان ثابت شد' : 'حالت آزاد پرواز');
@@ -509,11 +530,7 @@ class KoreanForestMinecraftApp {
     }
 
     if (p.grounded && !p.hoverMode) {
-      if (this.state.fuel <= 5) {
-        this.showToast('سوخت جت‌پک کافی نیست!');
-        return;
-      }
-      p.y += 1.4;
+      p.y += 1.6;
       p.vy = 0;
       p.grounded = false;
       p.flying = true;
@@ -525,10 +542,11 @@ class KoreanForestMinecraftApp {
         p.vy = 0;
       }
     }
+    if (p.hoverMode) this.completeMission('m_hover');
     this.updateHoverButtonUI();
     sakuraAudio.playClick();
     this.showToast(
-      p.hoverMode ? 'پرواز ثابت در آسمان فعال شد (با V آزاد می‌شود)' : 'ثابت‌نگهدار آسمان خاموش شد',
+      p.hoverMode ? 'پرواز ثابت در آسمان فعال شد (بدون سقوط، آزادسازی با V)' : 'ثابت‌نگهدار آسمان خاموش شد',
     );
   }
 
@@ -664,6 +682,7 @@ class KoreanForestMinecraftApp {
     if (!door) return;
     this.setDoorOpen(door, !door.isOpen);
     this.updateNearestContext();
+    this.scheduleAutoSave();
     this.showToast(door.isOpen ? `${door.name} باز شد` : `${door.name} بسته شد`);
   }
 
@@ -674,6 +693,7 @@ class KoreanForestMinecraftApp {
         entry.doorIds.forEach((id) => this.removeDoorById(id, false));
         sakuraAudio.playClick();
         this.updateTargetVoxel();
+        this.scheduleAutoSave();
         this.showToast('نصب در بازگردانی شد');
         return;
       }
@@ -682,6 +702,7 @@ class KoreanForestMinecraftApp {
         this.spawnDoorAt(s.ix, s.iy, s.iz, s.yaw, s.style, s.mirror, false);
         sakuraAudio.playClick();
         this.updateTargetVoxel();
+        this.scheduleAutoSave();
         this.showToast('در حذف‌شده برگردانده شد');
         return;
       }
@@ -690,6 +711,7 @@ class KoreanForestMinecraftApp {
         const restored = this.voxelWorld.undoLastAction();
         sakuraAudio.playClick();
         this.updateTargetVoxel();
+        this.scheduleAutoSave();
         this.showToast(`سازه و درهای آن بازگردانی شد (${toFaNum(restored)} بلوک)`);
         return;
       }
@@ -699,6 +721,7 @@ class KoreanForestMinecraftApp {
     if (restored > 0) {
       sakuraAudio.playClick();
       this.updateTargetVoxel();
+      this.scheduleAutoSave();
       this.showToast(`بازگردانی انجام شد (${toFaNum(restored)} بلوک)`);
     } else {
       this.showToast('تغییری برای بازگردانی وجود ندارد');
@@ -763,6 +786,9 @@ class KoreanForestMinecraftApp {
         this.triggerQuickHugOrFollow();
       } else if (k === 'KeyM') {
         this.openMenuModal();
+      } else if (k === 'KeyT') {
+        sakuraAudio.playClick();
+        this.setHotbarCollapsed(!this.hotbarCollapsed);
       } else if (k >= 'Digit1' && k <= 'Digit9') {
         this.state.selectedSlot = Number(k.replace('Digit', '')) - 1;
         this.state.customBlockId = null;
@@ -973,8 +999,8 @@ class KoreanForestMinecraftApp {
     document.getElementById('btn-camera-reset').addEventListener('click', () => {
       sakuraAudio.playClick();
       this.camYaw = this.playerState.yaw + Math.PI;
-      this.camPitch = 0.36;
-      this.camDist = 9.2;
+      this.camPitch = 0.28;
+      this.camDist = 7.8;
       this.showToast('دوربین پشت شخصیت تنظیم شد');
     });
     document.getElementById('btn-sound').addEventListener('click', () => {
@@ -1102,6 +1128,7 @@ class KoreanForestMinecraftApp {
       this.completeMission('m_break');
       this.updateTopHud();
       this.updateTargetVoxel();
+      this.scheduleAutoSave();
     }
   }
 
@@ -1149,6 +1176,7 @@ class KoreanForestMinecraftApp {
         this.state.placedCount += 1;
         this.completeMission('m_build');
         this.updateTargetVoxel();
+        this.scheduleAutoSave();
         this.showToast(`${door.name} نصب شد! (باز و بسته با E یا راست‌کلیک)`);
       } else {
         this.showToast('در این نقطه قبلا یک در نصب شده است');
@@ -1189,6 +1217,7 @@ class KoreanForestMinecraftApp {
         this.completeMission('m_build');
       }
       this.updateTargetVoxel();
+      this.scheduleAutoSave();
     } else {
       this.showToast('روی جای ایستادن خودتان نمی‌توانید بلوک بگذارید!');
     }
@@ -1339,6 +1368,7 @@ class KoreanForestMinecraftApp {
       p.x = v.x + Math.cos(v.yaw) * 2.2;
       p.z = v.z - Math.sin(v.yaw) * 2.2;
       p.y = this.voxelWorld.getTopSolidY(p.x, p.z) + 1;
+      p.visualY = p.y;
       p.vy = 0;
       v.speed = 0;
       this.playerMesh.visible = true;
@@ -1477,6 +1507,10 @@ class KoreanForestMinecraftApp {
     const p = this.playerState;
     const worldLim = this.voxelWorld.worldRadius - 3;
 
+    // Stream render window for large expanded worlds & scroll animated waterfall texture
+    this.voxelWorld.updateRenderWindow(p.x, p.z);
+    this.voxelWorld.scrollWaterfall(dt);
+
     // Periodic Auto-Save in browser
     this.autoSaveTimer += dt;
     if (this.autoSaveTimer >= 15) {
@@ -1600,39 +1634,79 @@ class KoreanForestMinecraftApp {
       v.mesh.rotation.y = v.yaw;
       p.x = v.x;
       p.y = v.y;
+      p.visualY = v.y;
       p.z = v.z;
       p.yaw = v.yaw;
+      if (!this.isDraggingCam) {
+        this.camYaw = lerpAngle(this.camYaw, v.yaw + Math.PI, 1 - Math.exp(-9 * dt));
+      }
       document.getElementById('vehicle-speed-badge').textContent = `${toFaNum(Math.round(Math.abs(v.speed) * 4))} کیلومتر`;
     } else {
+      // Ensure nearby underground caves, springs, and lava chambers are revealed and sealed
+      this.voxelWorld.ensureSubterraneanAroundPlayer(p.x, p.y, p.z);
+
+      // True Third-Person Behind-the-Player Camera: A/D or Joystick Left/Right gently steers camYaw
+      if (!this.isDraggingCam && Math.abs(inX) > 0.08) {
+        this.camYaw -= inX * 1.55 * dt;
+      }
+
       _camForward.set(-Math.sin(this.camYaw), 0, -Math.cos(this.camYaw)).normalize();
       _camRight.crossVectors(_camForward, _upVec).normalize();
       _moveDir.set(0, 0, 0);
       _moveDir.addScaledVector(_camForward, -inY);
-      _moveDir.addScaledVector(_camRight, inX);
+      _moveDir.addScaledVector(_camRight, inX * 0.65);
 
       const moveLen = Math.min(1, _moveDir.length());
       const inWater =
         this.voxelWorld.isWaterAt(p.x, p.y + 0.35, p.z) ||
         this.voxelWorld.isWaterAt(p.x, p.y + 0.05, p.z);
+      const inLava =
+        this.voxelWorld.isLavaAt(p.x, p.y + 0.25, p.z) ||
+        this.voxelWorld.isLavaAt(p.x, p.y - 0.1, p.z);
+
       p.swimming = inWater && !p.hoverMode;
       if (inWater) this.completeMission('m_sea');
 
-      const topSpeed = p.flying || p.hoverMode ? 13.0 : p.swimming ? 4.8 : 7.4;
+      if (this.lavaWarnCooldown > 0) this.lavaWarnCooldown = Math.max(0, this.lavaWarnCooldown - dt);
+      if (inLava) {
+        this.completeMission('m_dig');
+        this.state.hp = Math.max(0, this.state.hp - 16 * dt);
+        this.updateTopHud();
+        if (this.lavaWarnCooldown <= 0) {
+          this.lavaWarnCooldown = 2.5;
+          sakuraAudio.playKick();
+          this.showToast('هشدار گرما! وارد مواد مذاب آتشفشانی شدید (بپرید!)');
+        }
+        if (this.state.hp <= 0) {
+          this.state.hp = 100;
+          p.x = -23;
+          p.y = 1;
+          p.visualY = 1;
+          p.z = 21;
+          p.vy = 0;
+          sakuraAudio.playHeal();
+          this.updateTopHud();
+          this.showToast('پس از سوختن در مواد مذاب، در کلبه بازیابی شدید!');
+        }
+      }
+
+      const topSpeed = p.flying || p.hoverMode ? 13.0 : p.swimming ? 4.8 : inLava ? 4.0 : 7.4;
       let targetVx = 0;
       let targetVz = 0;
       if (moveLen > 0.04) {
         _moveDir.normalize();
         targetVx = _moveDir.x * topSpeed * moveLen;
         targetVz = _moveDir.z * topSpeed * moveLen;
-        const desiredYaw = Math.atan2(_moveDir.x, _moveDir.z);
-        p.yaw = lerpAngle(p.yaw, desiredYaw, 1 - Math.exp(-13 * dt));
       }
+
+      // Always keep player facing away from camera (true third-person behind-back angle)
+      p.yaw = lerpAngle(p.yaw, this.camYaw + Math.PI, 1 - Math.exp(-18 * dt));
 
       // Smooth damped acceleration & deceleration
       p.vx = THREE.MathUtils.damp(p.vx, targetVx, 11, dt);
       p.vz = THREE.MathUtils.damp(p.vz, targetVz, 11, dt);
 
-      if (p.hoverMode && this.state.fuel > 0.5) {
+      if (p.hoverMode) {
         p.flying = true;
         if (this.isFlyHeld) {
           p.vy = THREE.MathUtils.damp(p.vy, 7.8, 9, dt);
@@ -1641,11 +1715,8 @@ class KoreanForestMinecraftApp {
         } else {
           p.vy = THREE.MathUtils.damp(p.vy, 0, 14, dt);
         }
-        this.state.fuel = Math.max(0, this.state.fuel - dt * 2.6);
-        if (this.state.fuel <= 0.5) {
-          p.hoverMode = false;
-          this.updateHoverButtonUI();
-        }
+        // Keep hover lock steady indefinitely in the sky
+        this.state.fuel = Math.min(100, this.state.fuel + dt * 4);
       } else if (this.isFlyHeld && !p.grounded && !p.swimming && this.state.fuel > 1) {
         p.flying = true;
         p.vy = THREE.MathUtils.lerp(p.vy, 8.6, 1 - Math.exp(-8 * dt));
@@ -1657,8 +1728,14 @@ class KoreanForestMinecraftApp {
         } else if (this.isDescendHeld) {
           p.vy = THREE.MathUtils.damp(p.vy, -4.2, 8, dt);
         } else {
-          const surfaceY = 0.25;
-          p.vy = THREE.MathUtils.damp(p.vy, (surfaceY - p.y) * 4.0, 8, dt);
+          let surfaceY = Math.floor(p.y) + 0.28;
+          for (let wy = Math.floor(p.y) + 4; wy >= Math.floor(p.y) - 1; wy -= 1) {
+            if (this.voxelWorld.isWaterAt(p.x, wy, p.z)) {
+              surfaceY = wy + 0.28;
+              break;
+            }
+          }
+          p.vy = THREE.MathUtils.damp(p.vy, (surfaceY - p.y) * 4.2, 8, dt);
         }
         this.state.fuel = Math.min(100, this.state.fuel + dt * 20);
       } else {
@@ -1700,18 +1777,40 @@ class KoreanForestMinecraftApp {
       if (p.y >= 10) this.completeMission('m_fly');
       if (p.y <= -1.5) this.completeMission('m_dig');
 
+      p.visualY = THREE.MathUtils.damp(p.visualY ?? p.y, p.y, 16, dt);
+
+      const forwardVel = p.vx * _camForward.x + p.vz * _camForward.z;
       this.animateCharacterRig(this.playerMesh, Math.hypot(p.vx, p.vz), elapsed, dt, {
         flying: p.flying,
         swimming: p.swimming,
         kickTimer: p.kickTimer,
         hugTimer: p.hugTimer,
+        walkDir: forwardVel < -0.45 ? -1 : 1,
       });
 
       if (p.kickTimer > 0) p.kickTimer = Math.max(0, p.kickTimer - dt);
       if (p.hugTimer > 0) p.hugTimer = Math.max(0, p.hugTimer - dt);
 
-      this.playerMesh.position.set(p.x, p.y, p.z);
+      this.playerMesh.position.set(p.x, p.visualY, p.z);
       this.playerMesh.rotation.y = p.yaw;
+    }
+
+    // Underground / Night Headlamp Illumination & Cavern Atmosphere
+    const inCaveDark = p.y <= -0.8 && this.voxelWorld.hasRoofAbove(p.x, p.y, p.z);
+    if (inCaveDark && !this.isUndergroundScene) {
+      this.isUndergroundScene = true;
+      this.scene.background.set('#0e0f17');
+      this.scene.fog = new THREE.Fog('#0e0f17', 10, 48);
+    } else if (!inCaveDark && this.isUndergroundScene) {
+      this.isUndergroundScene = false;
+      this.applyTimeOfDay(this.timeOfDay);
+    }
+
+    if (this.headlampLight) {
+      const targetLamp = inCaveDark ? (p.y <= -10 ? 3.2 : 2.8) : p.y < 0.2 ? 2.1 : this.timeOfDay === 'night' ? 1.3 : 0;
+      this.headlampLight.color.set(p.y <= -10 ? '#ffd7b5' : '#fff3d1');
+      this.headlampLight.intensity = THREE.MathUtils.damp(this.headlampLight.intensity, targetLamp, 6, dt);
+      this.headlampLight.position.set(p.x, (p.visualY ?? p.y) + 1.6, p.z);
     }
 
     // Keep shadow frustum centered near player
@@ -1756,7 +1855,7 @@ class KoreanForestMinecraftApp {
     this.updateTargetVoxel();
 
     // Smooth Camera with Underground & Wall Pull-In Occlusion
-    const focusY = p.y + (p.vehicle ? 1.5 : 1.45);
+    const focusY = (p.visualY ?? p.y) + (p.vehicle ? 1.5 : 1.45);
     _lookGoal.set(p.x, focusY, p.z);
     const distNow = p.vehicle ? this.camDist + 3.0 : this.camDist;
     _camGoal.set(
@@ -1824,7 +1923,8 @@ class KoreanForestMinecraftApp {
     }
 
     if (speed > 0.25) {
-      rig.walkPhase = (rig.walkPhase || 0) + dt * Math.min(13, 4.5 + speed * 1.15);
+      const wDir = state.walkDir || 1;
+      rig.walkPhase = (rig.walkPhase || 0) + wDir * dt * Math.min(13, 4.5 + speed * 1.15);
       const swing = Math.sin(rig.walkPhase) * 0.68;
       const bob = Math.abs(Math.sin(rig.walkPhase)) * 0.05;
       rig.bodyPivot.position.y = THREE.MathUtils.damp(rig.bodyPivot.position.y, bob, 14, dt);
@@ -1880,6 +1980,7 @@ class KoreanForestMinecraftApp {
               this.state.hp = 100;
               p.x = -23;
               p.y = 1;
+              p.visualY = 1;
               p.z = 21;
               p.vy = 0;
               sakuraAudio.playHeal();
@@ -1998,7 +2099,8 @@ class KoreanForestMinecraftApp {
     }
 
     let zoneName = 'جنگل کره جنوبی';
-    if (p.y <= -0.5) zoneName = 'اعماق زمین و غار معدن';
+    if (p.y <= -10) zoneName = 'غار مواد مذاب و آتشفشان';
+    else if (p.y <= -0.5) zoneName = 'غارها و چشمه آب زیرزمینی';
     else if (p.x >= 47) zoneName = 'دریا و ساحل شرق';
     else if (Math.hypot(p.x + 36, p.z + 32) < 13) zoneName = 'آبشار و دریاچه کوهستان';
     else if (Math.hypot(p.x + 56, p.z - 42) < 12) zoneName = 'منطقه فرود آدم فضایی‌ها';
@@ -2081,12 +2183,14 @@ class KoreanForestMinecraftApp {
       const expBtn = document.createElement('button');
       expBtn.className = 'card-btn';
       const atMax = this.voxelWorld.worldRadius >= this.voxelWorld.maxRadius;
-      expBtn.textContent = atMax ? 'حداکثر وسعت فعال شده است' : 'گسترش فضا (+۲۴ بلوک از هر طرف)';
+      expBtn.textContent = atMax ? 'حداکثر وسعت فعال شده است' : 'گسترش فضا (+۳۰ بلوک از هر طرف)';
       expBtn.disabled = atMax;
       expBtn.onclick = () => {
-        const added = this.voxelWorld.expandWorldBy(24);
+        const added = this.voxelWorld.expandWorldBy(30);
         if (added > 0) {
+          this.voxelWorld.updateRenderWindow(this.playerState.x, this.playerState.z);
           this.applyTimeOfDay(this.timeOfDay);
+          this.completeMission('m_expand');
           sakuraAudio.playSpawn();
           this.saveState(false);
           this.openMenuModal();
@@ -2143,10 +2247,12 @@ class KoreanForestMinecraftApp {
           this.playerState.x = loc.x;
           this.playerState.z = loc.z;
           this.playerState.y = Math.max(loc.y, this.voxelWorld.getTopSolidY(loc.x, loc.z) + 1);
+          this.playerState.visualY = this.playerState.y;
           this.playerState.vy = 0;
           this.playerState.hoverMode = false;
           this.playerState.yaw = loc.rot;
           this.camYaw = loc.rot + Math.PI;
+          this.voxelWorld.updateRenderWindow(loc.x, loc.z);
           this.updateHoverButtonUI();
           sakuraAudio.playSpawn();
           this.closeModal();
@@ -2287,19 +2393,17 @@ class KoreanForestMinecraftApp {
   openMaterialsModal(filterCat = 'all') {
     this.openModal('بلوک‌ها، گیاهان، گل‌ها و درهای ساخت‌وساز', (body) => {
       const filterBar = document.createElement('div');
-      filterBar.style.display = 'flex';
-      filterBar.style.flexWrap = 'wrap';
-      filterBar.style.gap = '6px';
+      filterBar.className = 'mat-filter-tabs';
       [
         { id: 'all', name: 'همه موارد' },
-        { id: 'block', name: 'بلوک‌های ساختمانی و فضایی' },
+        { id: 'block', name: 'بلوک‌های ساختمانی' },
+        { id: 'special', name: 'فضایی، نورانی و آبشار' },
         { id: 'plant', name: 'گیاهان، چمن و گل‌ها' },
         { id: 'door', name: 'درهای بازشو' },
       ].forEach((tab) => {
         const b = document.createElement('button');
         b.type = 'button';
-        b.className = `card-btn ${filterCat === tab.id ? '' : 'secondary'}`;
-        b.style.marginTop = '0';
+        b.className = `mat-filter-tab ${filterCat === tab.id ? 'active' : ''}`;
         b.textContent = tab.name;
         b.onclick = () => this.openMaterialsModal(tab.id);
         filterBar.appendChild(b);
@@ -2307,7 +2411,7 @@ class KoreanForestMinecraftApp {
       body.appendChild(filterBar);
 
       const all = [...HOTBAR_BLOCKS, ...EXTRA_BLOCKS].filter(
-        (b) => filterCat === 'all' || b.category === filterCat,
+        (b) => filterCat === 'all' || (b.category || 'block') === filterCat,
       );
       const grid = document.createElement('div');
       grid.className = 'modal-grid';
@@ -2370,6 +2474,7 @@ class KoreanForestMinecraftApp {
             const door = this.spawnDoorAt(dx, dy, dz, p.yaw, pr.doorStyle || 'korean_wood', false, true);
             if (door) {
               sakuraAudio.playBlockPlace();
+              this.scheduleAutoSave();
               this.closeModal();
               this.showToast(`${door.name} نصب شد! با کلید E باز و بسته کنید`);
             } else {
@@ -2392,6 +2497,7 @@ class KoreanForestMinecraftApp {
             if (this.actionTimeline.length > 40) this.actionTimeline.shift();
             sakuraAudio.playBlockPlace();
             this.completeMission('m_house');
+            this.scheduleAutoSave();
             this.closeModal();
             this.showToast(`${pr.name} همراه با در بازشو ساخته شد! (بازگردانی با Z)`);
             return;
@@ -2401,11 +2507,13 @@ class KoreanForestMinecraftApp {
           const sx = p.x + Math.sin(p.yaw) * 3.8;
           const sz = p.z + Math.cos(p.yaw) * 3.8;
           const sy = this.voxelWorld.getTopSolidY(sx, sz) + 1;
+          mesh.userData.propId = pr.id;
           mesh.position.set(sx, sy, sz);
           mesh.rotation.y = p.yaw;
           this.scene.add(mesh);
           this.spawnedProps.push(mesh);
           sakuraAudio.playSpawn();
+          this.scheduleAutoSave();
           this.closeModal();
           this.showToast(`${pr.name} ساخته شد!`);
         };
@@ -2518,11 +2626,24 @@ class KoreanForestMinecraftApp {
     }, 3000);
   }
 
+  scheduleAutoSave() {
+    clearTimeout(this.debouncedSaveTimer);
+    this.debouncedSaveTimer = setTimeout(() => {
+      if (this.isRunning) this.saveState(false);
+    }, 1200);
+  }
+
   saveState(notify = false) {
-    try {
-      const payload = {
+    const buildPayload = (includeCapturedPhotos) => {
+      const stateCopy = { ...this.state };
+      if (!includeCapturedPhotos && Array.isArray(stateCopy.album)) {
+        stateCopy.album = stateCopy.album.filter(
+          (pic) => typeof pic.img === 'string' && !pic.img.startsWith('data:image/jpeg'),
+        );
+      }
+      return {
         version: 2,
-        state: this.state,
+        state: stateCopy,
         timeOfDay: this.timeOfDay,
         hotbarCollapsed: this.hotbarCollapsed,
         player: {
@@ -2541,12 +2662,29 @@ class KoreanForestMinecraftApp {
           mirror: d.mirror,
           isOpen: d.isOpen,
         })),
+        props: this.spawnedProps
+          .filter((sp) => sp.userData && sp.userData.propId)
+          .map((sp) => ({
+            propId: sp.userData.propId,
+            x: sp.position.x,
+            y: sp.position.y,
+            z: sp.position.z,
+            yaw: sp.rotation.y,
+          })),
         world: this.voxelWorld.exportWorldState(),
       };
-      localStorage.setItem(SAVE_KEY, JSON.stringify(payload));
+    };
+
+    try {
+      localStorage.setItem(SAVE_KEY, JSON.stringify(buildPayload(true)));
       if (notify) this.showToast('تمام وضعیت بازی در مرورگر ذخیره شد!');
     } catch {
-      if (notify) this.showToast('خطا در ذخیره وضعیت در مرورگر');
+      try {
+        localStorage.setItem(SAVE_KEY, JSON.stringify(buildPayload(false)));
+        if (notify) this.showToast('وضعیت جهان و پیشرفت ذخیره شد (عکس‌های حجیم حذف شدند)');
+      } catch {
+        if (notify) this.showToast('فضای ذخیره مرورگر پر است');
+      }
     }
   }
 
@@ -2562,7 +2700,6 @@ class KoreanForestMinecraftApp {
           this.voxelWorld.importWorldState(parsed.world);
         }
         if (Array.isArray(parsed.doors)) {
-          // Clear current doors and restore saved door layout
           [...this.doors].forEach((d) => this.removeDoorById(d.id, false));
           parsed.doors.forEach((ds) => {
             const spawned = this.spawnDoorAt(ds.ix, ds.iy, ds.iz, ds.yaw, ds.style, ds.mirror, false);
@@ -2572,9 +2709,22 @@ class KoreanForestMinecraftApp {
             }
           });
         }
+        if (Array.isArray(parsed.props)) {
+          this.spawnedProps.forEach((sp) => this.scene.remove(sp));
+          this.spawnedProps = [];
+          parsed.props.forEach((pr) => {
+            const mesh = buildPropsItem(pr.propId);
+            mesh.userData.propId = pr.propId;
+            mesh.position.set(pr.x, pr.y, pr.z);
+            mesh.rotation.y = pr.yaw || 0;
+            this.scene.add(mesh);
+            this.spawnedProps.push(mesh);
+          });
+        }
         if (parsed.player) {
           this.playerState.x = parsed.player.x ?? 0;
           this.playerState.y = parsed.player.y ?? 1;
+          this.playerState.visualY = this.playerState.y;
           this.playerState.z = parsed.player.z ?? 7;
           this.playerState.yaw = parsed.player.yaw ?? Math.PI;
           this.playerState.hoverMode = Boolean(parsed.player.hoverMode);
@@ -2590,6 +2740,7 @@ class KoreanForestMinecraftApp {
         this.state = { ...this.state, ...parsed };
       }
 
+      this.voxelWorld.updateRenderWindow(this.playerState.x, this.playerState.z);
       this.rebuildPlayerMesh();
       this.updateTopHud();
       this.renderHotbar();

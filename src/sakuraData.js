@@ -10,6 +10,8 @@ export const ASSET_PORTRAITS = {
   bg_seoul: './src/assets/images/bg_seoul_plaza_1795020941151.jpg',
   bg_mansion: './src/assets/images/bg_luxury_mansion_1795020941571.jpg',
   bg_busan: './src/assets/images/bg_busan_wedding_garden_1795020943672.jpg',
+  alien_avatar:
+    "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect width='96' height='96' rx='18' fill='%231e1b4b'/%3E%3Ccircle cx='48' cy='54' r='26' fill='%2374f046'/%3E%3Cellipse cx='37' cy='52' rx='7' ry='10' transform='rotate(-12 37 52)' fill='%23090d16'/%3E%3Cellipse cx='59' cy='52' rx='7' ry='10' transform='rotate(12 59 52)' fill='%23090d16'/%3E%3Ccircle cx='39' cy='48' r='2.5' fill='%237dd3fc'/%3E%3Ccircle cx='61' cy='48' r='2.5' fill='%237dd3fc'/%3E%3Cline x1='35' y1='30' x2='28' y2='15' stroke='%2374f046' stroke-width='4'/%3E%3Cline x1='61' y1='30' x2='68' y2='15' stroke='%2374f046' stroke-width='4'/%3E%3Ccircle cx='28' cy='14' r='5' fill='%2322d3ee'/%3E%3Ccircle cx='68' cy='14' r='5' fill='%2322d3ee'/%3E%3C/svg%3E",
 };
 
 export function toFaNum(val) {
@@ -70,7 +72,7 @@ export const PLAYABLE_CHARACTERS = [
     id: 'zorp',
     name: 'کاپیتان زُرپ (فضایی)',
     role: 'کاوشگر کهکشانی در جنگل کره',
-    portrait: ASSET_PORTRAITS.bg_seoul,
+    portrait: ASSET_PORTRAITS.alien_avatar,
     hairColor: '#34d399',
     hairStyle: 'short',
     skinColor: '#6ee7b7',
@@ -261,7 +263,25 @@ export const TELEPORT_LOCATIONS = [
     y: 1,
     z: -31,
     rot: Math.PI,
-    desc: 'دهانه غار برای کندن زمین و کشف طلا و کریستال در اعماق',
+    desc: 'دهانه غار با پلکان سنگی به سمت دریاچه زیرزمینی و مواد مذاب',
+  },
+  {
+    id: 'cave_water',
+    name: 'دریاچه آب زیرزمینی (غار کریستال)',
+    x: -18,
+    y: -7,
+    z: -42,
+    rot: Math.PI,
+    desc: 'چشمه آب زلال و قارچ‌های درخشان در دل غار سنگی زیر زمین',
+  },
+  {
+    id: 'cave_lava',
+    name: 'غار مواد مذاب و آتشفشان',
+    x: -18,
+    y: -12,
+    z: -54,
+    rot: Math.PI,
+    desc: 'تالار اعماق زمین با حوضچه مواد مذاب، ابسیدین و رگه‌های طلا',
   },
   {
     id: 'alien_zone',
@@ -477,6 +497,24 @@ export const NPC_DEFINITIONS = [
       'توی منوی مصالح بیشتر، می‌تونی گل و گیاه و بلوک‌های نئونی ما رو برداری!',
     ],
   },
+  {
+    id: 'npc_alien_neon',
+    name: 'کاوشگر نئون (آدم فضایی)',
+    role: 'نگهبان آبشار و دریاچه کوهستان',
+    x: -33,
+    z: -24,
+    skinColor: '#38bdf8',
+    topColor: '#1e293b',
+    accentColor: '#a3e635',
+    bottomColor: '#0f172a',
+    isAlien: true,
+    relation: 32,
+    hostile: false,
+    lines: [
+      'این آبشار کوهستانی و دریاچه ساکورا زیباترین منظره کل کهکشان است!',
+      'می‌تونی با کلید V در آسمان معلق بمونی یا از منو فضای جهان رو خیلی بزرگ‌تر کنی!',
+    ],
+  },
 ];
 
 export const KCHAT_INITIAL_MESSAGES = [
@@ -494,11 +532,13 @@ export const KCHAT_INITIAL_MESSAGES = [
 
 export const MISSIONS_LIST = [
   { id: 'm_break', title: 'خراب کردن دیوار یا درخت جنگل', reward: 50, desc: 'یک بلوک دیوار یا تنه درخت را بشکنید (کلیک چپ یا Q).' },
-  { id: 'm_dig', title: 'حفر زمین و سفر به زیرزمین', reward: 80, desc: 'زمین را بکنید و تا لایه‌های زیرزمینی (عمق ۲-) پایین بروید.' },
+  { id: 'm_dig', title: 'حفر زمین و سفر به غارها، آب زیرزمینی و مذاب', reward: 100, desc: 'زمین را بکنید یا از دهانه غار وارد حفره‌های زیرزمینی، آب‌های غار و حوضچه مواد مذاب شوید.' },
   { id: 'm_build', title: 'خانه‌سازی با بلوک‌های کره‌ای', reward: 60, desc: 'حداقل ۵ بلوک دیوار، سقف، گیاه یا شیشه در جهان قرار دهید (R یا کلیک راست).' },
   { id: 'm_house', title: 'ساخت خانه هانوک آماده', reward: 90, desc: 'از بخش ساخت خانه و اشیا، یک کلبه کامل هانوک بسازید.' },
   { id: 'm_fly', title: 'پرواز بالای درختان و قله برفی', reward: 60, desc: 'با جت‌پک یا بال‌ها تا ارتفاع ۱۰ بلوک اوج بگیرید.' },
-  { id: 'm_sea', title: 'شنا در دریا یا دیدن آبشار', reward: 70, desc: 'وارد آب دریای شرق، رودخانه یا دریاچه پای آبشار شوید.' },
+  { id: 'm_hover', title: 'توقف و معلق ماندن در آسمان', reward: 70, desc: 'هنگام پرواز کلید V یا دکمه «معلق در آسمان» را فعال کنید.' },
+  { id: 'm_sea', title: 'شنا در دریا، آبشار یا چشمه زیرزمینی', reward: 70, desc: 'وارد آب دریای شرق، رودخانه، دریاچه آبشار یا آب‌های زیرزمینی شوید.' },
+  { id: 'm_expand', title: 'گسترش فضای جهان بازی', reward: 90, desc: 'از منوی بازی دکمه «گسترش فضای جهان» را بزنید تا جنگل و دریا بزرگ‌تر شود.' },
   { id: 'm_drive', title: 'رانندگی یا پرواز با سفینه', reward: 50, desc: 'سوار خودرو، دوچرخه، هلیکوپتر یا سفینه فضایی UFO شوید.' },
   { id: 'm_alien', title: 'ملاقات با آدم فضایی‌ها', reward: 110, desc: 'با فرمانده زُرپ صحبت کنید یا سوار سفینه UFO شوید.' },
   { id: 'm_yakuza', title: 'نفوذ به قلعه یاکوزا', reward: 120, desc: 'یکی از رقیبان یاکوزا در قلعه شمال شرق را شکست دهید.' },
