@@ -66,7 +66,7 @@
           </div>
 
           <p class="title-hint">
-            حرکت: جوی‌استیک یا WASD · کندن دیوار: کلیک چپ یا Q · ساخت بلوک: کلیک راست یا R · بازگردانی: Z · تغییر بلوک: ۱ تا ۹ و ۰ و - و = · جت‌پک: Space · سوار ماشین: C
+            حرکت: جوی‌استیک یا WASD · کندن زمین و دیوار: کلیک چپ یا Q · ساخت بلوک و گیاه: کلیک راست یا R · بازگردانی: Z · جت‌پک: Space · معلق شدن در آسمان: V · پایین آمدن: Shift یا B · سوار ماشین و سفینه: C
           </p>
         </div>
       </section>
@@ -137,6 +137,9 @@
           <button id="btn-camera-reset" class="sakura-top-btn" type="button">
             <span>دوربین</span>
           </button>
+          <button id="btn-quick-save" class="sakura-top-btn save-top-btn" type="button">
+            <span>ذخیره</span>
+          </button>
           <button id="btn-sound" class="sakura-top-btn" type="button">
             <span id="sound-label">صدا: روشن</span>
           </button>
@@ -173,16 +176,21 @@
 
       <!-- نوار بلوک‌ها و ابزارهای حرفه‌ای ساخت‌وساز ماینکرفت (پایین وسط) -->
       <div id="minecraft-hotbar" class="minecraft-hotbar hidden" aria-label="ابزارهای ساخت خانه">
-        <div class="hotbar-tools-row">
-          <button id="btn-click-mode" class="click-mode-btn" type="button">
-            حالت کلیک: <strong id="click-mode-label">کندن دیوار</strong>
-          </button>
-          <div id="build-tool-pills" class="build-tool-pills"></div>
-          <button id="btn-undo-build" class="tool-util-btn" type="button" title="بازگردانی آخرین تغییر (Z)">بازگردانی (Z)</button>
-          <button id="btn-all-blocks" class="tool-util-btn" type="button" title="انتخاب مصالح بیشتر">مصالح +</button>
-          <span id="target-block-label" class="target-block-label">نشانه: آماده</span>
+        <button id="btn-toggle-hotbar" class="hotbar-toggle-btn" type="button">
+          <span id="hotbar-toggle-label">بستن منوی ابزارها و بلوک‌ها ▾</span>
+        </button>
+        <div id="hotbar-panel-body" class="hotbar-panel-body">
+          <div class="hotbar-tools-row">
+            <button id="btn-click-mode" class="click-mode-btn" type="button">
+              حالت کلیک: <strong id="click-mode-label">کندن زمین/دیوار</strong>
+            </button>
+            <div id="build-tool-pills" class="build-tool-pills"></div>
+            <button id="btn-undo-build" class="tool-util-btn" type="button" title="بازگردانی آخرین تغییر (Z)">بازگردانی (Z)</button>
+            <button id="btn-all-blocks" class="tool-util-btn" type="button" title="انتخاب مصالح و گیاهان بیشتر">مصالح و گیاه +</button>
+            <span id="target-block-label" class="target-block-label">نشانه: آماده</span>
+          </div>
+          <div id="hotbar-slots" class="hotbar-slots"></div>
         </div>
-        <div id="hotbar-slots" class="hotbar-slots"></div>
       </div>
 
       <!-- خوشه دکمه‌های اکشن (پایین راست) -->
@@ -191,13 +199,22 @@
           تعامل (E)
         </button>
 
+        <div class="flight-mini-row">
+          <button id="act-hover" class="flight-mini-btn" type="button" title="ثابت ماندن در آسمان (V)">
+            معلق در آسمان (V)
+          </button>
+          <button id="act-descend" class="flight-mini-btn" type="button" title="پایین آمدن هنگام پرواز (Shift / B)">
+            پایین آمدن
+          </button>
+        </div>
+
         <div class="sakura-action-pad">
           <button id="act-break" class="sakura-pad-btn pad-stone" type="button">
-            <span class="pad-title">کندن دیوار</span>
+            <span class="pad-title">کندن زمین/دیوار</span>
             <span class="pad-key">Q / کلیک</span>
           </button>
           <button id="act-place" class="sakura-pad-btn pad-wood" type="button">
-            <span class="pad-title">ساخت بلوک</span>
+            <span class="pad-title">ساخت بلوک/گیاه</span>
             <span class="pad-key">R / راست‌کلیک</span>
           </button>
           <button id="act-fly" class="sakura-pad-btn pad-sky" type="button">

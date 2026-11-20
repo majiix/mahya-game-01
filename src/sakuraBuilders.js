@@ -357,6 +357,46 @@ export function buildVehicle(type, customColor) {
     root.add(hull, cockpit, tail, rotorHub, tailRotor);
     root.userData.rotorHub = rotorHub;
     root.userData.tailRotor = tailRotor;
+  } else if (type === 'ufo') {
+    const hullMat = makeMat(customColor || '#94a3b8', 0.22, 0.85);
+    const domeMat = makeMat('#a855f7', 0.15, 0.2, {
+      transparent: true,
+      opacity: 0.72,
+      emissive: '#7e22ce',
+      emissiveIntensity: 0.4,
+    });
+    const neonMat = makeMat('#22d3ee', 0.2, 0.1, {
+      emissive: '#22d3ee',
+      emissiveIntensity: 1.8,
+    });
+
+    const saucerRing = new THREE.Group();
+    const outerDisc = new THREE.Mesh(new THREE.BoxGeometry(4.4, 0.42, 4.4), hullMat);
+    outerDisc.position.y = 1.15;
+    const midDisc = new THREE.Mesh(new THREE.BoxGeometry(3.2, 0.6, 3.2), hullMat);
+    midDisc.position.y = 1.35;
+    const glowRim = new THREE.Mesh(new THREE.BoxGeometry(4.6, 0.16, 4.6), neonMat);
+    glowRim.position.y = 1.08;
+
+    const dome = new THREE.Mesh(new THREE.BoxGeometry(2.0, 1.0, 2.0), domeMat);
+    dome.position.y = 1.95;
+
+    const beamPad = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.12, 1.4), neonMat);
+    beamPad.position.y = 0.82;
+
+    [
+      [-1.3, 0.45, 1.3],
+      [1.3, 0.45, 1.3],
+      [0, 0.45, -1.5],
+    ].forEach(([lx, ly, lz]) => {
+      const leg = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.75, 0.18), hullMat);
+      leg.position.set(lx, ly, lz);
+      root.add(leg);
+    });
+
+    saucerRing.add(outerDisc, glowRim);
+    root.add(saucerRing, midDisc, dome, beamPad);
+    root.userData.ufoRing = saucerRing;
   }
 
   setShadow(root, true, true);
@@ -554,4 +594,258 @@ export function buildPetalSystem(scene) {
   );
   scene.add(petalPoints);
   return { petalPoints, petalVel };
+}
+
+// Composite 3D Alien Character (grounded at y = 0, compatible with animateCharacterRig)
+export function buildAlienCharacter(cfg = {}) {
+  const root = new THREE.Group();
+
+  const skinMat = makeMat(cfg.skinColor || '#74f046', 0.42, 0.08, {
+    emissive: cfg.skinGlow || '#22c55e',
+    emissiveIntensity: 0.16,
+  });
+  const suitMat = makeMat(cfg.topColor || '#334155', 0.28, 0.72);
+  const trimMat = makeMat(cfg.accentColor || '#38bdf8', 0.2, 0.4, {
+    emissive: cfg.accentColor || '#38bdf8',
+    emissiveIntensity: 0.85,
+  });
+  const bottomMat = makeMat(cfg.bottomColor || '#1e293b', 0.45, 0.45);
+  const eyeMat = makeMat('#090d16', 0.08, 0.9);
+  const glintMat = makeMat('#e0f2fe', 0.1, 0.1, { emissive: '#7dd3fc', emissiveIntensity: 1.4 });
+  const bootMat = makeMat('#0f172a', 0.35, 0.65);
+
+  const bodyPivot = new THREE.Group();
+  root.add(bodyPivot);
+
+  const torso = new THREE.Group();
+  torso.position.y = 0.94;
+  bodyPivot.add(torso);
+
+  const chest = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.56, 0.26), suitMat);
+  chest.position.y = 0.24;
+  torso.add(chest);
+
+  const coreBadge = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.18, 0.06), trimMat);
+  coreBadge.position.set(0, 0.28, 0.14);
+  torso.add(coreBadge);
+
+  const belt = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.1, 0.28), trimMat);
+  belt.position.set(0, -0.02, 0);
+  torso.add(belt);
+
+  // Oversized Alien Head with Almond Eyes & Glowing Antennae
+  const head = new THREE.Group();
+  head.position.set(0, 0.82, 0);
+  torso.add(head);
+
+  const cranium = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.54, 0.54), skinMat);
+  head.add(cranium);
+
+  const browRidge = new THREE.Mesh(new THREE.BoxGeometry(0.56, 0.16, 0.5), skinMat);
+  browRidge.position.set(0, 0.26, -0.02);
+  head.add(browRidge);
+
+  // Big glossy alien eyes
+  const eyeL = new THREE.Mesh(new THREE.BoxGeometry(0.17, 0.22, 0.05), eyeMat);
+  eyeL.position.set(-0.14, 0.0, 0.27);
+  eyeL.rotation.z = 0.16;
+  const eyeR = new THREE.Mesh(new THREE.BoxGeometry(0.17, 0.22, 0.05), eyeMat);
+  eyeR.position.set(0.14, 0.0, 0.27);
+  eyeR.rotation.z = -0.16;
+  head.add(eyeL, eyeR);
+
+  const glintL = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.06, 0.02), glintMat);
+  glintL.position.set(-0.11, 0.05, 0.295);
+  const glintR = glintL.clone();
+  glintR.position.x = 0.17;
+  head.add(glintL, glintR);
+
+  // Dual glowing antennae
+  const stalkGeo = new THREE.CylinderGeometry(0.025, 0.032, 0.34, 8);
+  const orbGeo = new THREE.SphereGeometry(0.075, 12, 10);
+  const antL = new THREE.Group();
+  antL.position.set(-0.18, 0.32, 0);
+  antL.rotation.z = 0.24;
+  const stalkL = new THREE.Mesh(stalkGeo, skinMat);
+  stalkL.position.y = 0.17;
+  const orbL = new THREE.Mesh(orbGeo, trimMat);
+  orbL.position.y = 0.36;
+  antL.add(stalkL, orbL);
+
+  const antR = new THREE.Group();
+  antR.position.set(0.18, 0.32, 0);
+  antR.rotation.z = -0.24;
+  const stalkR = new THREE.Mesh(stalkGeo, skinMat);
+  stalkR.position.y = 0.17;
+  const orbR = new THREE.Mesh(orbGeo, trimMat);
+  orbR.position.y = 0.36;
+  antR.add(stalkR, orbR);
+  head.add(antL, antR);
+
+  function buildArm(side) {
+    const pivot = new THREE.Group();
+    pivot.position.set(side * 0.32, 0.48, 0);
+    const sleeve = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.34, 0.16), suitMat);
+    sleeve.position.y = -0.15;
+    const hand = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.24, 0.15), skinMat);
+    hand.position.y = -0.42;
+    pivot.add(sleeve, hand);
+    torso.add(pivot);
+    return pivot;
+  }
+
+  function buildLeg(side) {
+    const pivot = new THREE.Group();
+    pivot.position.set(side * 0.13, 0.84, 0);
+    const legMesh = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.58, 0.2), bottomMat);
+    legMesh.position.y = -0.29;
+    const boot = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.24, 0.26), bootMat);
+    boot.position.set(0, -0.7, 0.02);
+    pivot.add(legMesh, boot);
+    bodyPivot.add(pivot);
+    return pivot;
+  }
+
+  const leftArm = buildArm(-1);
+  const rightArm = buildArm(1);
+  const leftLeg = buildLeg(-1);
+  const rightLeg = buildLeg(1);
+
+  // Back Alien Thruster Pack
+  const pack = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.36, 0.16), suitMat);
+  pack.position.set(0, 0.25, -0.2);
+  torso.add(pack);
+  const flameL = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.28, 0.09), trimMat);
+  flameL.position.set(-0.1, -0.06, -0.22);
+  const flameR = flameL.clone();
+  flameR.position.x = 0.1;
+  flameL.visible = false;
+  flameR.visible = false;
+  torso.add(flameL, flameR);
+
+  const dummyWing = new THREE.Group();
+  setShadow(root, true, false);
+
+  root.userData.rig = {
+    bodyPivot,
+    torso,
+    head,
+    leftArm,
+    rightArm,
+    leftLeg,
+    rightLeg,
+    flameL,
+    flameR,
+    wingAngelL: dummyWing,
+    wingAngelR: dummyWing,
+    wingBatL: dummyWing,
+    wingBatR: dummyWing,
+    antL,
+    antR,
+    setFlightGear() {},
+    setThrusterActive(active) {
+      flameL.visible = active;
+      flameR.visible = active;
+    },
+  };
+
+  return root;
+}
+
+// Composite 3D Hovering Alien UFO Saucer
+export function buildAlienUFO() {
+  const root = new THREE.Group();
+
+  const hullMat = makeMat('#64748b', 0.24, 0.85);
+  const darkHullMat = makeMat('#1e293b', 0.35, 0.72);
+  const domeMat = new THREE.MeshStandardMaterial({
+    color: '#a5f3fc',
+    transparent: true,
+    opacity: 0.58,
+    roughness: 0.1,
+    metalness: 0.2,
+    depthWrite: false,
+  });
+  const neonGreen = makeMat('#a3e635', 0.2, 0.3, { emissive: '#84cc16', emissiveIntensity: 1.8 });
+  const neonCyan = makeMat('#38bdf8', 0.2, 0.3, { emissive: '#0ea5e9', emissiveIntensity: 1.8 });
+
+  const saucer = new THREE.Group();
+  root.add(saucer);
+
+  const mainDisc = new THREE.Mesh(new THREE.CylinderGeometry(3.6, 4.4, 0.85, 24), hullMat);
+  mainDisc.position.y = 4.6;
+  const upperDeck = new THREE.Mesh(new THREE.CylinderGeometry(2.3, 3.6, 0.55, 24), darkHullMat);
+  upperDeck.position.y = 5.25;
+  const lowerBelly = new THREE.Mesh(new THREE.CylinderGeometry(4.1, 1.8, 0.7, 24), darkHullMat);
+  lowerBelly.position.y = 3.85;
+  const glassDome = new THREE.Mesh(
+    new THREE.SphereGeometry(1.9, 20, 14, 0, Math.PI * 2, 0, Math.PI * 0.52),
+    domeMat,
+  );
+  glassDome.position.y = 5.45;
+  const coreRing = new THREE.Mesh(new THREE.TorusGeometry(1.65, 0.14, 10, 24), neonCyan);
+  coreRing.rotation.x = Math.PI / 2;
+  coreRing.position.y = 3.5;
+
+  saucer.add(mainDisc, upperDeck, lowerBelly, glassDome, coreRing);
+
+  const lightRing = new THREE.Group();
+  lightRing.position.y = 4.55;
+  for (let i = 0; i < 12; i += 1) {
+    const ang = (i / 12) * Math.PI * 2;
+    const bulb = new THREE.Mesh(
+      new THREE.SphereGeometry(0.24, 10, 8),
+      i % 2 === 0 ? neonGreen : neonCyan,
+    );
+    bulb.position.set(Math.cos(ang) * 4.15, 0, Math.sin(ang) * 4.15);
+    lightRing.add(bulb);
+  }
+  saucer.add(lightRing);
+
+  // Soft Glowing Tractor Beam Cone reaching the ground
+  const beamMat = new THREE.MeshBasicMaterial({
+    color: '#67e8f9',
+    transparent: true,
+    opacity: 0.17,
+    depthWrite: false,
+    side: THREE.DoubleSide,
+  });
+  const beam = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 2.7, 3.6, 20, 1, true), beamMat);
+  beam.position.y = 1.8;
+  root.add(beam);
+
+  setShadow(saucer, true, false);
+  root.userData.saucer = saucer;
+  root.userData.lightRing = lightRing;
+  root.userData.beam = beam;
+  return root;
+}
+
+// Waterfall Mist & Spray Particles
+export function buildWaterfallMist(scene, mistTexture, cx, baseY, cz, height = 11) {
+  const count = 110;
+  const geo = new THREE.BufferGeometry();
+  const pos = new Float32Array(count * 3);
+  const vel = new Float32Array(count * 2); // vy, phase
+  for (let i = 0; i < count; i += 1) {
+    const isSplash = i < 55;
+    pos[i * 3] = cx + (Math.random() - 0.5) * (isSplash ? 5.2 : 3.2);
+    pos[i * 3 + 1] = isSplash ? baseY + Math.random() * 2.2 : baseY + Math.random() * height;
+    pos[i * 3 + 2] = cz + (Math.random() - 0.5) * (isSplash ? 3.8 : 1.4);
+    vel[i * 2] = isSplash ? 0.9 + Math.random() * 1.4 : -(4.2 + Math.random() * 2.8);
+    vel[i * 2 + 1] = Math.random() * Math.PI * 2;
+  }
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  const points = new THREE.Points(
+    geo,
+    new THREE.PointsMaterial({
+      map: mistTexture,
+      size: 0.9,
+      transparent: true,
+      depthWrite: false,
+      opacity: 0.78,
+    }),
+  );
+  scene.add(points);
+  return { points, vel, cx, baseY, cz, height };
 }

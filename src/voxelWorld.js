@@ -2,27 +2,45 @@ import * as THREE from 'three';
 import { createSignTexture, createVoxelTextures } from './sakuraTextures.js';
 
 export const HOTBAR_BLOCKS = [
-  { id: 'hanok_wood', name: 'چوب هانوک', color: '#a3683b' },
-  { id: 'white_plaster', name: 'دیوار سفید', color: '#f3ede4' },
-  { id: 'stone', name: 'سنگ کره‌ای', color: '#7c8594' },
-  { id: 'brick', name: 'آجر سئول', color: '#c95649' },
-  { id: 'hanok_roof', name: 'سفال گیوا', color: '#2f3847' },
-  { id: 'glass', name: 'شیشه', color: '#7dd3fc' },
-  { id: 'wooden_door', name: 'در چوبی', color: '#8c522b', isDoor: true, doorStyle: 'korean_wood' },
-  { id: 'bookshelf', name: 'قفسه کتاب', color: '#945b31' },
-  { id: 'bamboo', name: 'بامبو', color: '#52b748' },
-  { id: 'fence_post', name: 'نرده چوبی', color: '#b37544' },
-  { id: 'lantern', name: 'فانوس', color: '#fde047' },
-  { id: 'sakura_leaves', name: 'شکوفه', color: '#ff9ec4' },
+  { id: 'hanok_wood', name: 'چوب هانوک', color: '#a3683b', category: 'block' },
+  { id: 'white_plaster', name: 'دیوار سفید', color: '#f3ede4', category: 'block' },
+  { id: 'stone', name: 'سنگ کره‌ای', color: '#7c8594', category: 'block' },
+  { id: 'brick', name: 'آجر سئول', color: '#c95649', category: 'block' },
+  { id: 'hanok_roof', name: 'سفال گیوا', color: '#2f3847', category: 'block' },
+  { id: 'glass', name: 'شیشه', color: '#7dd3fc', category: 'block' },
+  { id: 'wooden_door', name: 'در چوبی', color: '#8c522b', isDoor: true, doorStyle: 'korean_wood', category: 'door' },
+  { id: 'bookshelf', name: 'قفسه کتاب', color: '#945b31', category: 'block' },
+  { id: 'bamboo', name: 'بامبو', color: '#52b748', category: 'block' },
+  { id: 'tall_grass', name: 'چمن بلند', color: '#5ea83c', isPlant: true, category: 'plant' },
+  { id: 'lantern', name: 'فانوس', color: '#fde047', category: 'block' },
+  { id: 'sakura_leaves', name: 'شکوفه', color: '#ff9ec4', category: 'block' },
 ];
 
 export const EXTRA_BLOCKS = [
-  { id: 'hanok_door', name: 'در کشویی هانوک', color: '#f5ebd6', isDoor: true, doorStyle: 'hanok_sliding' },
-  { id: 'glass_door', name: 'در شیشه‌ای کافه', color: '#38bdf8', isDoor: true, doorStyle: 'glass_modern' },
-  { id: 'gold_block', name: 'بلوک طلایی قصر', color: '#facc15' },
-  { id: 'pink_wool', name: 'پشم صورتی', color: '#f472b6' },
-  { id: 'cobble_moss', name: 'سنگ خزه‌دار', color: '#5ea83c' },
-  { id: 'grass', name: 'چمن جنگل', color: '#69b844' },
+  { id: 'hanok_door', name: 'در کشویی هانوک', color: '#f5ebd6', isDoor: true, doorStyle: 'hanok_sliding', category: 'door' },
+  { id: 'glass_door', name: 'در شیشه‌ای کافه', color: '#38bdf8', isDoor: true, doorStyle: 'glass_modern', category: 'door' },
+  { id: 'sand', name: 'شن ساحلی', color: '#f3dfa2', category: 'block' },
+  { id: 'marble', name: 'سنگ مرمر سفید', color: '#f1f5f9', category: 'block' },
+  { id: 'dark_oak', name: 'چوب بلوط تیره', color: '#4a2e1b', category: 'block' },
+  { id: 'amethyst_crystal', name: 'کریستال آمیتیست', color: '#9333ea', category: 'block' },
+  { id: 'snow_block', name: 'بلوک برف کوهستان', color: '#e0f2fe', category: 'block' },
+  { id: 'obsidian_stone', name: 'سنگ فضایی ابسیدین', color: '#2e2942', category: 'block' },
+  { id: 'autumn_leaves', name: 'برگ پاییزی نارنجی', color: '#ea580c', category: 'block' },
+  { id: 'neon_pink', name: 'نئون صورتی سئول', color: '#ff4fa3', category: 'block' },
+  { id: 'neon_cyan', name: 'نئون آبی فضایی', color: '#22d3ee', category: 'block' },
+  { id: 'sea_lantern', name: 'فانوس دریایی', color: '#67e8f9', category: 'block' },
+  { id: 'gold_block', name: 'بلوک طلایی قصر', color: '#facc15', category: 'block' },
+  { id: 'pink_wool', name: 'پشم صورتی', color: '#f472b6', category: 'block' },
+  { id: 'cobble_moss', name: 'سنگ خزه‌دار', color: '#5ea83c', category: 'block' },
+  { id: 'grass', name: 'چمن جنگل', color: '#69b844', category: 'block' },
+  { id: 'dirt', name: 'خاک جنگل', color: '#825636', category: 'block' },
+  { id: 'fence_post', name: 'نرده چوبی', color: '#b37544', category: 'block' },
+  { id: 'water', name: 'بلوک آب', color: '#0ea5e9', category: 'block' },
+  { id: 'pink_flower', name: 'گل صورتی ساکورا', color: '#ff69b4', isPlant: true, category: 'plant' },
+  { id: 'yellow_flower', name: 'گل زرد وحشی', color: '#facc15', isPlant: true, category: 'plant' },
+  { id: 'lotus_pad', name: 'نیلوفر آبی دریاچه', color: '#22c55e', isPlant: true, category: 'plant' },
+  { id: 'fern_bush', name: 'بوته سرخس جنگلی', color: '#15803d', isPlant: true, category: 'plant' },
+  { id: 'glow_mushroom', name: 'قارچ درخشان غار', color: '#06b6d4', isPlant: true, category: 'plant' },
 ];
 
 export const ALL_BLOCK_NAMES = {
@@ -37,6 +55,7 @@ export const ALL_BLOCK_NAMES = {
   hanok_roof: 'سفال سقف گیوا',
   pine_leaves: 'برگ کاج',
   sakura_leaves: 'شکوفه ساکورا',
+  autumn_leaves: 'برگ پاییزی',
   glass: 'شیشه پنجره',
   wooden_door: 'در چوبی کره‌ای',
   hanok_door: 'در کشویی هانوک',
@@ -47,8 +66,33 @@ export const ALL_BLOCK_NAMES = {
   gold_block: 'بلوک طلایی قصر',
   pink_wool: 'پشم صورتی',
   lantern: 'فانوس درخشان',
-  water: 'آب رودخانه',
+  water: 'آب زلال',
+  sand: 'شن ساحلی',
+  marble: 'سنگ مرمر سفید',
+  dark_oak: 'چوب بلوط تیره',
+  amethyst_crystal: 'کریستال آمیتیست',
+  snow_block: 'بلوک برف',
+  obsidian_stone: 'سنگ فضایی ابسیدین',
+  neon_pink: 'نئون صورتی',
+  neon_cyan: 'نئون آبی فضایی',
+  sea_lantern: 'فانوس دریایی',
+  bedrock: 'سنگ بستر اعماق زمین',
+  tall_grass: 'چمن بلند جنگل',
+  pink_flower: 'گل صورتی ساکورا',
+  yellow_flower: 'گل زرد وحشی',
+  lotus_pad: 'نیلوفر آبی دریاچه',
+  fern_bush: 'بوته سرخس',
+  glow_mushroom: 'قارچ درخشان غار',
 };
+
+export const PLANT_IDS = new Set([
+  'tall_grass',
+  'pink_flower',
+  'yellow_flower',
+  'lotus_pad',
+  'fern_bush',
+  'glow_mushroom',
+]);
 
 export const BUILD_TOOLS = [
   { id: 'single', name: 'تک‌بلوک', desc: 'گذاشتن یا کندن ۱ بلوک' },
@@ -59,7 +103,55 @@ export const BUILD_TOOLS = [
   { id: 'doorway', name: 'دربازکن / نصب در', desc: 'باز کردن دهانه ۱×۲ در دیوار یا نصب در چوبی' },
 ];
 
-const MAX_INSTANCES_PER_TYPE = 9500;
+function getMaxInstances(type) {
+  if (type === 'grass') return 48000;
+  if (type === 'water') return 30000;
+  if (type === 'stone' || type === 'dirt') return 20000;
+  if (type === 'sand' || type === 'pine_leaves' || type === 'sakura_leaves') return 16000;
+  if (type === 'tall_grass' || type === 'autumn_leaves' || type === 'snow_block') return 10000;
+  return 5500;
+}
+
+function createCrossedPlantGeometry() {
+  const w = 0.44;
+  const yBot = -0.5;
+  const yTop = 0.42;
+  const diag = w * Math.SQRT1_2;
+
+  const positions = new Float32Array([
+    // Plane 1
+    -diag, yBot, -diag,
+    diag, yBot, diag,
+    diag, yTop, diag,
+    -diag, yTop, -diag,
+    // Plane 2
+    -diag, yBot, diag,
+    diag, yBot, -diag,
+    diag, yTop, -diag,
+    -diag, yTop, diag,
+  ]);
+
+  const uvs = new Float32Array([
+    0, 0,
+    1, 0,
+    1, 1,
+    0, 1,
+    0, 0,
+    1, 0,
+    1, 1,
+    0, 1,
+  ]);
+
+  const indices = [0, 1, 2, 0, 2, 3, 4, 5, 6, 4, 6, 7];
+
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  geo.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
+  geo.setIndex(indices);
+  geo.computeVertexNormals();
+  return geo;
+}
+
 const _dummy = new THREE.Object3D();
 
 export class VoxelWorld {
@@ -73,10 +165,19 @@ export class VoxelWorld {
     this.blockedDoorKeys = new Set();
     this.doorCellMap = new Map();
     this.initialDoorAnchors = [];
-    this.worldRadius = 46;
+    this.waterfallAnchors = [];
+
+    this.deltas = new Map();
+    this.dugCells = new Set();
+
+    this.worldRadius = 86;
+    this.maxRadius = 182;
+    this.minY = -10;
+    this.maxY = 48;
 
     this.textures = createVoxelTextures();
     this.unitGeo = new THREE.BoxGeometry(1, 1, 1);
+    this.plantGeo = createCrossedPlantGeometry();
 
     this.initMaterialsAndBatches();
     this.generateKoreanForestWorld();
@@ -115,6 +216,7 @@ export class VoxelWorld {
         emissive: '#ff7aa8',
         emissiveIntensity: 0.12,
       }),
+      autumn_leaves: makeStd(t.autumn_leaves, { roughness: 0.85 }),
       glass: new THREE.MeshStandardMaterial({
         map: t.glass,
         transparent: true,
@@ -132,7 +234,7 @@ export class VoxelWorld {
       water: new THREE.MeshStandardMaterial({
         map: t.water,
         transparent: true,
-        opacity: 0.78,
+        opacity: 0.76,
         roughness: 0.15,
         metalness: 0.15,
       }),
@@ -144,13 +246,81 @@ export class VoxelWorld {
       cobble_moss: makeStd(t.cobble_moss, { roughness: 0.85 }),
       wooden_door: makeStd(t.wooden_door, { roughness: 0.68 }),
       fence_post: makeStd(t.fence_post, { roughness: 0.75 }),
+      sand: makeStd(t.sand, { roughness: 0.9 }),
+      marble: makeStd(t.marble, { roughness: 0.35, metalness: 0.08 }),
+      dark_oak: makeStd(t.dark_oak, { roughness: 0.76 }),
+      amethyst_crystal: makeStd(t.amethyst_crystal, {
+        roughness: 0.25,
+        metalness: 0.25,
+        emissive: '#7e22ce',
+        emissiveIntensity: 0.38,
+      }),
+      snow_block: makeStd(t.snow_block, { roughness: 0.72 }),
+      obsidian_stone: makeStd(t.obsidian_stone, { roughness: 0.52, metalness: 0.22 }),
+      neon_pink: makeStd(t.neon_pink, {
+        roughness: 0.3,
+        emissive: '#ff4fa3',
+        emissiveIntensity: 0.95,
+      }),
+      neon_cyan: makeStd(t.neon_cyan, {
+        roughness: 0.3,
+        emissive: '#22d3ee',
+        emissiveIntensity: 0.95,
+      }),
+      sea_lantern: makeStd(t.sea_lantern, {
+        roughness: 0.25,
+        emissive: '#67e8f9',
+        emissiveIntensity: 1.05,
+      }),
+      bedrock: makeStd(t.bedrock, { roughness: 0.95 }),
+      // Cutout plant types
+      tall_grass: new THREE.MeshStandardMaterial({
+        map: t.tall_grass,
+        alphaTest: 0.45,
+        side: THREE.DoubleSide,
+        roughness: 0.85,
+      }),
+      pink_flower: new THREE.MeshStandardMaterial({
+        map: t.pink_flower,
+        alphaTest: 0.45,
+        side: THREE.DoubleSide,
+        roughness: 0.8,
+      }),
+      yellow_flower: new THREE.MeshStandardMaterial({
+        map: t.yellow_flower,
+        alphaTest: 0.45,
+        side: THREE.DoubleSide,
+        roughness: 0.8,
+      }),
+      lotus_pad: new THREE.MeshStandardMaterial({
+        map: t.lotus_pad,
+        alphaTest: 0.45,
+        side: THREE.DoubleSide,
+        roughness: 0.75,
+      }),
+      fern_bush: new THREE.MeshStandardMaterial({
+        map: t.fern_bush,
+        alphaTest: 0.45,
+        side: THREE.DoubleSide,
+        roughness: 0.88,
+      }),
+      glow_mushroom: new THREE.MeshStandardMaterial({
+        map: t.glow_mushroom,
+        alphaTest: 0.45,
+        side: THREE.DoubleSide,
+        emissive: '#22d3ee',
+        emissiveIntensity: 0.8,
+        roughness: 0.5,
+      }),
     };
 
     Object.entries(materials).forEach(([type, mat]) => {
-      const inst = new THREE.InstancedMesh(this.unitGeo, mat, MAX_INSTANCES_PER_TYPE);
+      const isPlant = PLANT_IDS.has(type);
+      const geo = isPlant ? this.plantGeo : this.unitGeo;
+      const inst = new THREE.InstancedMesh(geo, mat, getMaxInstances(type));
       inst.count = 0;
-      inst.castShadow = type !== 'water' && type !== 'glass';
-      inst.receiveShadow = true;
+      inst.castShadow = !isPlant && type !== 'water' && type !== 'glass';
+      inst.receiveShadow = !isPlant;
       inst.frustumCulled = false;
       this.scene.add(inst);
       this.batches[type] = inst;
@@ -165,7 +335,12 @@ export class VoxelWorld {
     const k = this.key(x, y, z);
     if (this.blockedDoorKeys.has(k)) return true;
     const b = this.blocks.get(k) || null;
-    return b !== null && b !== 'water' && b !== 'wooden_door';
+    return b !== null && b !== 'water' && b !== 'wooden_door' && !PLANT_IDS.has(b);
+  }
+
+  isWaterAt(x, y, z) {
+    const b = this.getBlock(Math.round(x), Math.floor(y), Math.round(z));
+    return b === 'water';
   }
 
   setDoorRegistration(ix, iy, iz, doorId, blocked) {
@@ -198,7 +373,7 @@ export class VoxelWorld {
   commitEdit() {
     if (this.activeEditBatch && this.activeEditBatch.size > 0) {
       this.undoStack.push(this.activeEditBatch);
-      if (this.undoStack.length > 30) {
+      if (this.undoStack.length > 35) {
         this.undoStack.shift();
       }
     }
@@ -214,8 +389,11 @@ export class VoxelWorld {
       if (curType) this.dirtyTypes.add(curType);
       if (prevType === null) {
         this.blocks.delete(k);
+        this.deltas.set(k, null);
       } else {
         this.blocks.set(k, prevType);
+        this.deltas.set(k, prevType);
+        this.dugCells.delete(k);
         this.dirtyTypes.add(prevType);
       }
       restored += 1;
@@ -230,9 +408,10 @@ export class VoxelWorld {
     }
   }
 
-  setBlock(x, y, z, type, immediate = false) {
-    if (y < 0 || y > 32) return false;
+  setBlock(x, y, z, type, immediate = false, recordDelta = true) {
+    if (y < this.minY || y > this.maxY) return false;
     if (Math.abs(x) > this.worldRadius || Math.abs(z) > this.worldRadius) return false;
+    if (!this.batches[type]) return false;
     const k = this.key(x, y, z);
     const prev = this.blocks.get(k);
     if (prev === type) return false;
@@ -240,18 +419,88 @@ export class VoxelWorld {
     if (prev) this.dirtyTypes.add(prev);
     this.blocks.set(k, type);
     this.dirtyTypes.add(type);
+    if (recordDelta) {
+      this.deltas.set(k, type);
+      this.dugCells.delete(k);
+    }
     if (immediate) this.flushBatches();
     return true;
   }
 
-  removeBlock(x, y, z, immediate = false) {
-    if (y <= 0) return null; // Keep bedrock ground layer safe
+  getNaturalSubterraneanBlock(x, y, z) {
+    if (y <= this.minY) return 'bedrock';
+    if (y >= -2) return 'dirt';
+    const caveNoise =
+      Math.sin(x * 0.23) * Math.cos(z * 0.23) + Math.sin(y * 0.56 + x * 0.12 - z * 0.11);
+    if (y <= -3 && y >= -8 && caveNoise > 1.24) {
+      return null; // Hollow underground cavern pocket
+    }
+    const oreHash = Math.abs(Math.sin(x * 12.9898 + y * 78.233 + z * 37.719) * 43758.5453) % 1;
+    if (y <= -6 && oreHash > 0.925) return 'amethyst_crystal';
+    if (y <= -5 && oreHash > 0.87 && oreHash <= 0.925) return 'gold_block';
+    if (oreHash < 0.14) return 'cobble_moss';
+    return 'stone';
+  }
+
+  revealSubterraneanAround(cx, cy, cz) {
+    const queue = [[cx, cy, cz, 0]];
+    const visited = new Set();
+    let revealedCount = 0;
+
+    while (queue.length > 0 && revealedCount < 80) {
+      const [x, y, z, depth] = queue.shift();
+      const dirs = [
+        [1, 0, 0],
+        [-1, 0, 0],
+        [0, 1, 0],
+        [0, -1, 0],
+        [0, 0, 1],
+        [0, 0, -1],
+      ];
+
+      for (let i = 0; i < dirs.length; i += 1) {
+        const nx = x + dirs[i][0];
+        const ny = y + dirs[i][1];
+        const nz = z + dirs[i][2];
+        if (ny < this.minY || ny > 0) continue;
+        if (Math.abs(nx) > this.worldRadius || Math.abs(nz) > this.worldRadius) continue;
+
+        const nk = this.key(nx, ny, nz);
+        if (visited.has(nk)) continue;
+        visited.add(nk);
+
+        if (this.blocks.has(nk) || this.dugCells.has(nk) || this.deltas.has(nk)) continue;
+
+        const nat = this.getNaturalSubterraneanBlock(nx, ny, nz);
+        if (nat === null) {
+          this.dugCells.add(nk);
+          if (depth < 2) {
+            queue.push([nx, ny, nz, depth + 1]);
+          }
+        } else {
+          this.blocks.set(nk, nat);
+          this.dirtyTypes.add(nat);
+          revealedCount += 1;
+        }
+      }
+    }
+  }
+
+  removeBlock(x, y, z, immediate = false, recordDelta = true) {
+    if (y <= this.minY) return null;
     const k = this.key(x, y, z);
     const prev = this.blocks.get(k);
-    if (!prev) return null;
+    if (!prev || prev === 'bedrock') return null;
     this.recordPrev(k);
     this.blocks.delete(k);
     this.dirtyTypes.add(prev);
+    if (recordDelta) {
+      this.deltas.set(k, null);
+      this.dugCells.add(k);
+    }
+    if (y <= 1) {
+      this.revealSubterraneanAround(x, y, z);
+    }
     if (immediate) this.flushBatches();
     return prev;
   }
@@ -272,8 +521,10 @@ export class VoxelWorld {
 
     this.dirtyTypes.forEach((type) => {
       const inst = this.batches[type];
+      if (!inst) return;
       const list = grouped[type] || [];
-      const count = Math.min(list.length, MAX_INSTANCES_PER_TYPE);
+      const maxLim = getMaxInstances(type);
+      const count = Math.min(list.length, maxLim);
       for (let i = 0; i < count; i += 1) {
         const [bx, by, bz] = list[i];
         _dummy.position.set(bx, by + 0.5, bz);
@@ -290,98 +541,251 @@ export class VoxelWorld {
     this.dirtyTypes.clear();
   }
 
-  generateKoreanForestWorld() {
-    const R = this.worldRadius;
+  isProtectedColumn(x, z) {
+    if (Math.abs(x) <= 4 || Math.abs(z - 4) <= 3) return true; // Main roads
+    if (Math.abs(x) <= 10 && z >= -24 && z <= -9) return true; // School
+    if (x >= -30 && x <= -15 && z >= 8 && z <= 23) return true; // Cabin
+    if (x >= 14 && x <= 27 && z >= 8 && z <= 21) return true; // Cafe
+    if (x >= 21 && x <= 35 && z >= -28 && z <= -15) return true; // Yakuza
+    if (Math.hypot(x + 24, z + 22) < 6) return true; // Temple Gate
+    if (Math.hypot(x + 56, z - 42) < 10) return true; // Alien UFO landing pad
+    return false;
+  }
 
-    // 1. Forest Terrain (Flat central Korean village clearing + rolling wooded hills)
-    for (let x = -R; x <= R; x += 1) {
-      for (let z = -R; z <= R; z += 1) {
-        const dist = Math.hypot(x, z);
-        let h = 0;
-        if (dist > 26) {
-          const wave = Math.sin(x * 0.16) * Math.cos(z * 0.14) + Math.sin((x + z) * 0.09);
-          h = Math.max(0, Math.min(3, Math.floor((dist - 26) * 0.14 + (wave + 1) * 0.75)));
+  getRiverCenterX(z) {
+    return -13 + Math.sin(z * 0.14) * 5.2 - (z < -16 ? (z + 16) * 0.95 : 0);
+  }
+
+  getCoastlineX(z) {
+    return 50 + Math.sin(z * 0.08) * 3.5 + Math.cos(z * 0.04) * 2.0;
+  }
+
+  generateRingTerrain(minR, maxR, isInitial = false) {
+    const seaEnd = maxR;
+    for (let x = -maxR; x <= maxR; x += 1) {
+      for (let z = -maxR; z <= maxR; z += 1) {
+        const cheb = Math.max(Math.abs(x), Math.abs(z));
+        if (!isInitial && cheb < minR) continue;
+
+        const coastX = this.getCoastlineX(z);
+        const distLake = Math.hypot(x + 36, z + 32);
+        const distPond = Math.hypot(x + 14, z - 34);
+        const distMount = Math.hypot(x + 48, z + 44);
+        const distAlienPad = Math.hypot(x + 56, z - 42);
+        const riverX = this.getRiverCenterX(z);
+        const onRiver = z >= -34 && z <= 46 && Math.abs(x - riverX) <= 2.1;
+
+        // 1. Eastern Sea & Beach
+        if (x >= coastX - 3 && x <= seaEnd) {
+          if (x < coastX) {
+            this.setBlock(x, 0, z, 'sand', false, false);
+            continue;
+          }
+          // Sea bed and water
+          this.setBlock(x, -2, z, 'sand', false, false);
+          this.setBlock(x, -1, z, 'water', false, false);
+          this.setBlock(x, 0, z, 'water', false, false);
+          if ((Math.abs(x * 7 + z * 11) % 53) === 0 && x > coastX + 4) {
+            this.setBlock(x, -2, z, 'sea_lantern', false, false);
+          }
+          continue;
         }
 
-        // Keep road corridors & building plots flat
-        const onMainPath = Math.abs(x) <= 3 || Math.abs(z - 4) <= 2;
-        const onBuildingPad =
-          (Math.abs(x) <= 9 && z >= -24 && z <= -10) ||
-          (x >= -29 && x <= -15 && z >= 8 && z <= 22) ||
-          (x >= 14 && x <= 26 && z >= 8 && z <= 20) ||
-          (x >= 22 && x <= 34 && z >= -28 && z <= -16);
-        if (onMainPath || onBuildingPad) {
+        // 2. Mountain Lake & Sakura Pond & River
+        if (distLake <= 8.5 || distPond <= 6.5 || onRiver) {
+          this.setBlock(x, -2, z, 'cobble_moss', false, false);
+          this.setBlock(x, -1, z, 'water', false, false);
+          this.setBlock(x, 0, z, 'water', false, false);
+          const hash = Math.abs(Math.sin(x * 13.7 + z * 29.3) * 43758.5) % 1;
+          if ((distLake <= 7.5 || distPond <= 5.5) && hash > 0.91 && Math.abs(z - 4) > 3) {
+            this.setBlock(x, 1, z, 'lotus_pad', false, false);
+          }
+          continue;
+        }
+
+        // 3. Alien Crater Plateau
+        if (distAlienPad <= 8.5) {
+          const isRim = distAlienPad > 6.8;
+          this.setBlock(x, 0, z, isRim ? 'obsidian_stone' : Math.round(distAlienPad) % 3 === 0 ? 'neon_cyan' : 'obsidian_stone', false, false);
+          continue;
+        }
+
+        // 4. Mountain Peak (Northwest behind lake for waterfall)
+        let h = 0;
+        if (distMount < 15 && distLake > 8.2) {
+          const rawPeak = Math.round((15 - distMount) * 1.15);
+          h = Math.max(0, Math.min(14, rawPeak));
+        } else {
+          const dist = Math.hypot(x, z);
+          if (dist > 26 && !this.isProtectedColumn(x, z)) {
+            const wave = Math.sin(x * 0.13) * Math.cos(z * 0.12) + Math.sin((x - z) * 0.07);
+            h = Math.max(0, Math.min(4, Math.floor((dist - 26) * 0.08 + (wave + 1) * 0.7)));
+          }
+        }
+
+        const onMainPath = (Math.abs(x) <= 2 && Math.abs(z) <= 44) || (Math.abs(z - 4) <= 2 && x >= -32 && x <= 46);
+        if (onMainPath || this.isProtectedColumn(x, z)) {
           h = 0;
         }
 
         for (let y = 0; y <= h; y += 1) {
           const isTop = y === h;
-          let blockType = isTop ? 'grass' : 'dirt';
+          let blockType = isTop ? 'grass' : y >= h - 1 ? 'dirt' : 'stone';
+          if (h >= 9 && isTop) blockType = 'snow_block';
+          else if (h >= 4 && isTop) blockType = y % 2 === 0 ? 'stone' : 'grass';
           if (onMainPath && y === 0) blockType = 'stone';
-          this.setBlock(x, y, z, blockType);
+          this.setBlock(x, y, z, blockType, false, false);
+        }
+
+        // Scatter natural flowers & tall grass on grassy top blocks
+        if (h <= 3 && !onMainPath && !this.isProtectedColumn(x, z)) {
+          const flHash = Math.abs(Math.sin(x * 41.3 + z * 19.7) * 19384.2) % 1;
+          if (flHash > 0.945) {
+            this.setBlock(x, h + 1, z, 'tall_grass', false, false);
+          } else if (flHash > 0.922 && flHash <= 0.945) {
+            this.setBlock(x, h + 1, z, 'pink_flower', false, false);
+          } else if (flHash > 0.905 && flHash <= 0.922) {
+            this.setBlock(x, h + 1, z, 'yellow_flower', false, false);
+          } else if (flHash > 0.892 && flHash <= 0.905) {
+            this.setBlock(x, h + 1, z, 'fern_bush', false, false);
+          }
         }
       }
     }
 
-    // 2. Forest Creek + Wooden Bridge (West side)
-    for (let z = -10; z <= 10; z += 1) {
-      const cx = Math.round(-12 + Math.sin(z * 0.35) * 1.5);
-      for (let dx = -1; dx <= 1; dx += 1) {
-        this.setBlock(cx + dx, 0, z, 'water');
-      }
-    }
-    // Bridge over creek at z = 3..5
-    for (let bx = -14; bx <= -10; bx += 1) {
-      for (let bz = 3; bz <= 5; bz += 1) {
-        this.setBlock(bx, 1, bz, 'hanok_wood');
-      }
-    }
+    // Add trees in this ring
+    const treeCount = isInitial ? 185 : 95;
+    for (let i = 0; i < treeCount; i += 1) {
+      const ang = (i + (isInitial ? 0 : minR)) * 2.39996;
+      const span = Math.max(4, maxR - Math.max(15, minR));
+      const rad = Math.max(15, minR) + ((i * 23) % span);
+      const tx = Math.round(Math.cos(ang) * rad);
+      const tz = Math.round(Math.sin(ang) * rad);
+      if (Math.abs(tx) > maxR - 2 || Math.abs(tz) > maxR - 2) continue;
+      if (tx >= this.getCoastlineX(tz) - 4) continue; // Keep sea & beach clear
+      if (this.isProtectedColumn(tx, tz)) continue;
+      if (Math.hypot(tx + 36, tz + 32) < 10) continue; // Lake
+      if (Math.hypot(tx + 14, tz - 34) < 8) continue; // Pond
+      if (Math.abs(tx - this.getRiverCenterX(tz)) < 4) continue; // River
+      if (Math.hypot(tx + 48, tz + 44) < 12) continue; // Mountain waterfall
 
-    // 3. Korean Hanok Schoolhouse (North-center: x = -7..7, z = -23..-13)
-    this.buildVoxelHanok(0, 1, -18, 13, 9, 4, true);
+      const groundY = this.getTopSolidY(tx, tz);
+      const topBlk = this.getBlock(tx, groundY, tz);
+      if (!topBlk || topBlk === 'water' || topBlk === 'sand' || topBlk === 'obsidian_stone') continue;
+
+      if (i % 7 === 0) {
+        // Tall Korean bamboo cluster
+        const bh = 4 + (i % 4);
+        for (let by = 1; by <= bh; by += 1) {
+          this.setBlock(tx, groundY + by, tz, 'bamboo', false, false);
+        }
+      } else {
+        const leafPool = ['pine_leaves', 'pine_leaves', 'sakura_leaves', 'autumn_leaves'];
+        const leafType = leafPool[i % leafPool.length];
+        this.buildVoxelTree(tx, groundY + 1, tz, leafType, 4 + (i % 3), false);
+      }
+    }
+  }
+
+  expandWorldBy(delta = 24) {
+    if (this.worldRadius >= this.maxRadius) return 0;
+    const prevR = this.worldRadius;
+    const nextR = Math.min(this.maxRadius, prevR + delta);
+    this.worldRadius = nextR;
+    this.generateRingTerrain(prevR + 1, nextR, false);
+    this.flushBatches();
+    return nextR - prevR;
+  }
+
+  generateKoreanForestWorld() {
+    this.generateRingTerrain(0, this.worldRadius, true);
+
+    // Scenic Wooden Bridge over the river at z = 3..5
+    for (let bx = -17; bx <= -10; bx += 1) {
+      for (let bz = 3; bz <= 5; bz += 1) {
+        this.setBlock(bx, 1, bz, 'hanok_wood', false, false);
+      }
+    }
+    this.setBlock(-17, 2, 3, 'lantern', false, false);
+    this.setBlock(-10, 2, 5, 'lantern', false, false);
+
+    // Coastal Wooden Pier into Eastern Sea (z = 3..5, x = 49..60)
+    for (let px = 49; px <= 60; px += 1) {
+      for (let pz = 3; pz <= 5; pz += 1) {
+        this.setBlock(px, 1, pz, 'hanok_wood', false, false);
+      }
+      if (px % 4 === 0) {
+        this.setBlock(px, 2, 3, 'fence_post', false, false);
+        this.setBlock(px, 2, 5, 'fence_post', false, false);
+      }
+    }
+    this.setBlock(60, 2, 3, 'sea_lantern', false, false);
+    this.setBlock(60, 2, 5, 'sea_lantern', false, false);
+    this.addVoxelSign('اسکله ساحلی و دریای شرق', 'شنا و غواصی آزاد', '#0284c7', 52, 4.4, 2.2);
+
+    // Cascading Mountain Waterfall into Mountain Lake (-41, 1..11, -36)
+    for (let wy = 1; wy <= 11; wy += 1) {
+      this.setBlock(-41, wy, -36, 'water', false, false);
+      this.setBlock(-40, wy, -36, 'water', false, false);
+      this.setBlock(-42, wy, -37, 'cobble_moss', false, false);
+      this.setBlock(-39, wy, -37, 'cobble_moss', false, false);
+    }
+    this.waterfallAnchors = [{ x: -40.5, yTop: 11.5, yBot: 0.6, z: -35.8 }];
+    this.addVoxelSign('آبشار و دریاچه کوهستان', 'چشمه بلورین جنگل', '#0e7490', -36, 4.2, -23.5);
+
+    // Alien UFO Crater Monuments & Crystals (-56, z = 42)
+    [
+      [-62, 42],
+      [-50, 42],
+      [-56, 36],
+      [-56, 48],
+    ].forEach(([ax, az]) => {
+      this.setBlock(ax, 1, az, 'obsidian_stone', false, false);
+      this.setBlock(ax, 2, az, 'amethyst_crystal', false, false);
+      this.setBlock(ax, 3, az, 'neon_cyan', false, false);
+    });
+    this.addVoxelSign('منطقه فرود سفینه فضایی', 'بازدید از مهمانان کهکشانی', '#581c87', -56, 4.6, 34);
+
+    // Natural Cave Entrance Arch near (-18, z = -34) leading underground
+    for (let cy = 0; cy >= -4; cy -= 1) {
+      const stepOffset = -cy;
+      for (let dx = -1; dx <= 1; dx += 1) {
+        const k = this.key(-18 + dx, cy, -34 - stepOffset);
+        this.blocks.delete(k);
+        this.dugCells.add(k);
+        this.setBlock(-18 + dx, cy - 1, -34 - stepOffset, 'stone', false, false);
+      }
+      this.revealSubterraneanAround(-18, cy, -34 - stepOffset);
+    }
+    this.setBlock(-20, 1, -33, 'lantern', false, false);
+    this.setBlock(-16, 1, -33, 'lantern', false, false);
+    this.setBlock(-18, -3, -38, 'glow_mushroom', false, false);
+    this.addVoxelSign('ورودی غار و معدن زیرزمینی', 'زمین را بکنید و به اعماق بروید', '#4338ca', -18, 4.2, -32.5);
+
+    // Korean Hanok Schoolhouse (North-center: x = -7..7, z = -23..-13)
+    this.buildVoxelHanok(0, 1, -18, 13, 9, 4, true, true);
     this.addVoxelSign('دبیرستان هانوک ساکورا', 'جنگل کره جنوبی', '#7c3f23', 0, 5.2, -13.2);
 
-    // 4. Starter Cozy Forest Cabin (Southwest: x = -23, z = 15)
-    this.buildVoxelHanok(-23, 1, 15, 7, 7, 3, false);
+    // Starter Cozy Forest Cabin (Southwest: x = -23, z = 15)
+    this.buildVoxelHanok(-23, 1, 15, 7, 7, 3, false, true);
     this.addVoxelSign('کلبه جنگلی مین‌جی و جون‌هو', 'قابل تخریب و بازسازی', '#be185d', -23, 4.4, 18.8);
 
-    // 5. Seoul Forest Brick Cafe (Southeast: x = 20, z = 14)
+    // Seoul Forest Brick Cafe (Southeast: x = 20, z = 14)
     this.buildVoxelCafe(20, 1, 14);
     this.addVoxelSign('کافه آجری سئول', 'خرید بوبا و هدیه (E)', '#b91c1c', 20, 4.8, 18.2);
 
-    // 6. Korean Mountain Temple Iljumun Gate (Northwest: x = -24, z = -22)
+    // Korean Mountain Temple Iljumun Gate (Northwest: x = -24, z = -22)
     this.buildKoreanGate(-24, 1, -22);
 
-    // 7. Yakuza Forest Fortress (Northeast: x = 28, z = -22)
+    // Yakuza Forest Fortress (Northeast: x = 28, z = -22)
     this.buildYakuzaFortress(28, 1, -22);
     this.addVoxelSign('پایگاه یاکوزا موموگومی', 'دیوارها را بشکنید!', '#18181b', 28, 4.5, -17.3);
 
-    // 8. Dense Korean Pine & Cherry Blossom Forest Trees
-    const treePositions = [];
-    for (let i = 0; i < 68; i += 1) {
-      const ang = i * 2.39996;
-      const rad = 14 + ((i * 19) % 30);
-      const tx = Math.round(Math.cos(ang) * rad);
-      const tz = Math.round(Math.sin(ang) * rad);
-      if (Math.abs(tx) < 11 && tz > -25 && tz < 12) continue;
-      if (Math.hypot(tx + 23, tz - 15) < 7) continue;
-      if (Math.hypot(tx - 20, tz - 14) < 7) continue;
-      if (Math.hypot(tx - 28, tz + 22) < 8) continue;
-      if (Math.hypot(tx + 24, tz + 22) < 6) continue;
-      if (Math.abs(tx) <= 4 || Math.abs(tz - 4) <= 4) continue;
-      treePositions.push([tx, tz, i % 3 === 0 ? 'sakura_leaves' : 'pine_leaves']);
-    }
-
-    treePositions.forEach(([tx, tz, leafType], idx) => {
-      const groundY = this.getTopSolidY(tx, tz) + 1;
-      this.buildVoxelTree(tx, groundY, tz, leafType, 4 + (idx % 2));
-    });
-
-    // Clear central starter courtyard lamps
+    // Starter courtyard lamps
     [[-4, 10], [4, 10], [-4, -6], [4, -6]].forEach(([lx, lz]) => {
-      this.setBlock(lx, 1, lz, 'stone');
-      this.setBlock(lx, 2, lz, 'hanok_wood');
-      this.setBlock(lx, 3, lz, 'lantern');
+      this.setBlock(lx, 1, lz, 'stone', false, false);
+      this.setBlock(lx, 2, lz, 'hanok_wood', false, false);
+      this.setBlock(lx, 3, lz, 'lantern', false, false);
     });
   }
 
@@ -397,34 +801,27 @@ export class VoxelWorld {
     this.scene.add(sign);
   }
 
-  buildVoxelHanok(cx, baseY, cz, width, depth, wallH, isSchool, registerAnchor = true) {
+  buildVoxelHanok(cx, baseY, cz, width, depth, wallH, isSchool, registerAnchor = true, recordDelta = false) {
     const hw = Math.floor(width / 2);
     const hd = Math.floor(depth / 2);
 
-    // Stone foundation
     for (let x = cx - hw - 1; x <= cx + hw + 1; x += 1) {
       for (let z = cz - hd - 1; z <= cz + hd + 1; z += 1) {
-        this.setBlock(x, baseY - 1, z, 'stone');
+        this.setBlock(x, baseY - 1, z, 'stone', false, recordDelta);
       }
     }
 
-    // Walls with door opening on front (+z) and glass windows
     for (let y = baseY; y < baseY + wallH; y += 1) {
       for (let x = cx - hw; x <= cx + hw; x += 1) {
         for (let z = cz - hd; z <= cz + hd; z += 1) {
           const onX = x === cx - hw || x === cx + hw;
           const onZ = z === cz - hd || z === cz + hd;
           if (!onX && !onZ) continue;
-
-          // Front Doorway (2-wide double door for school, 1-wide for cabin/hanok)
           const isDoorCol = isSchool ? x === cx || x === cx + 1 : x === cx;
-          if (z === cz + hd && isDoorCol && y < baseY + 2) {
-            continue;
-          }
-          // Windows
+          if (z === cz + hd && isDoorCol && y < baseY + 2) continue;
           const isMidY = y === baseY + 1;
           const isWinPos = (Math.abs(x - cx) === 3 || Math.abs(z - cz) === 2) && isMidY;
-          this.setBlock(x, y, z, isWinPos ? 'glass' : 'hanok_wood');
+          this.setBlock(x, y, z, isWinPos ? 'glass' : 'hanok_wood', false, recordDelta);
         }
       }
     }
@@ -447,11 +844,9 @@ export class VoxelWorld {
       }
     }
 
-    // Corner pillars + lanterns
-    this.setBlock(cx - 2, baseY + 2, cz + hd + 1, 'lantern');
-    this.setBlock(cx + 2, baseY + 2, cz + hd + 1, 'lantern');
+    this.setBlock(cx - 2, baseY + 2, cz + hd + 1, 'lantern', false, recordDelta);
+    this.setBlock(cx + 2, baseY + 2, cz + hd + 1, 'lantern', false, recordDelta);
 
-    // Tiered Korean Giwa Roof
     const roofBaseY = baseY + wallH;
     for (let tier = 0; tier < (isSchool ? 3 : 2); tier += 1) {
       const ew = hw + 1 - tier * 2;
@@ -459,7 +854,7 @@ export class VoxelWorld {
       if (ew < 1 || ed < 1) break;
       for (let x = cx - ew; x <= cx + ew; x += 1) {
         for (let z = cz - ed; z <= cz + ed; z += 1) {
-          this.setBlock(x, roofBaseY + tier, z, 'hanok_roof');
+          this.setBlock(x, roofBaseY + tier, z, 'hanok_roof', false, recordDelta);
         }
       }
     }
@@ -470,7 +865,7 @@ export class VoxelWorld {
     const hd = 3;
     for (let x = cx - hw; x <= cx + hw; x += 1) {
       for (let z = cz - hd; z <= cz + hd; z += 1) {
-        this.setBlock(x, baseY - 1, z, 'stone');
+        this.setBlock(x, baseY - 1, z, 'stone', false, false);
       }
     }
     for (let y = baseY; y < baseY + 3; y += 1) {
@@ -480,7 +875,7 @@ export class VoxelWorld {
           if (!onEdge) continue;
           if (z === cz + hd && x === cx && y < baseY + 2) continue;
           const isGlass = z === cz + hd && y === baseY + 1 && Math.abs(x - cx) >= 2;
-          this.setBlock(x, y, z, isGlass ? 'glass' : 'brick');
+          this.setBlock(x, y, z, isGlass ? 'glass' : 'brick', false, false);
         }
       }
     }
@@ -494,26 +889,26 @@ export class VoxelWorld {
     });
     for (let x = cx - hw - 1; x <= cx + hw + 1; x += 1) {
       for (let z = cz - hd - 1; z <= cz + hd + 1; z += 1) {
-        this.setBlock(x, baseY + 3, z, 'hanok_roof');
+        this.setBlock(x, baseY + 3, z, 'hanok_roof', false, false);
       }
     }
-    this.setBlock(cx - 2, baseY + 2, cz + hd + 1, 'lantern');
-    this.setBlock(cx + 2, baseY + 2, cz + hd + 1, 'lantern');
+    this.setBlock(cx - 2, baseY + 2, cz + hd + 1, 'lantern', false, false);
+    this.setBlock(cx + 2, baseY + 2, cz + hd + 1, 'lantern', false, false);
   }
 
   buildKoreanGate(cx, baseY, cz) {
     for (let y = baseY; y < baseY + 4; y += 1) {
-      this.setBlock(cx - 2, y, cz, 'brick');
-      this.setBlock(cx + 2, y, cz, 'brick');
+      this.setBlock(cx - 2, y, cz, 'brick', false, false);
+      this.setBlock(cx + 2, y, cz, 'brick', false, false);
     }
     for (let x = cx - 4; x <= cx + 4; x += 1) {
-      this.setBlock(x, baseY + 4, cz, 'hanok_roof');
+      this.setBlock(x, baseY + 4, cz, 'hanok_roof', false, false);
       if (Math.abs(x - cx) <= 3) {
-        this.setBlock(x, baseY + 5, cz, 'hanok_roof');
+        this.setBlock(x, baseY + 5, cz, 'hanok_roof', false, false);
       }
     }
-    this.setBlock(cx - 2, baseY + 3, cz + 1, 'lantern');
-    this.setBlock(cx + 2, baseY + 3, cz + 1, 'lantern');
+    this.setBlock(cx - 2, baseY + 3, cz + 1, 'lantern', false, false);
+    this.setBlock(cx + 2, baseY + 3, cz + 1, 'lantern', false, false);
   }
 
   buildYakuzaFortress(cx, baseY, cz) {
@@ -525,7 +920,7 @@ export class VoxelWorld {
           const onEdge = x === cx - hw || x === cx + hw || z === cz - hd || z === cz + hd;
           if (!onEdge) continue;
           if (z === cz + hd && x === cx && y < baseY + 2) continue;
-          this.setBlock(x, y, z, y === baseY ? 'stone' : 'hanok_roof');
+          this.setBlock(x, y, z, y === baseY ? 'stone' : 'hanok_roof', false, false);
         }
       }
     }
@@ -537,13 +932,13 @@ export class VoxelWorld {
       style: 'korean_wood',
       mirror: false,
     });
-    this.setBlock(cx - 2, baseY + 2, cz + hd + 1, 'lantern');
-    this.setBlock(cx + 2, baseY + 2, cz + hd + 1, 'lantern');
+    this.setBlock(cx - 2, baseY + 2, cz + hd + 1, 'lantern', false, false);
+    this.setBlock(cx + 2, baseY + 2, cz + hd + 1, 'lantern', false, false);
   }
 
-  buildVoxelTree(tx, baseY, tz, leafType, trunkHeight) {
+  buildVoxelTree(tx, baseY, tz, leafType, trunkHeight, recordDelta = false) {
     for (let y = 0; y < trunkHeight; y += 1) {
-      this.setBlock(tx, baseY + y, tz, 'wood_log');
+      this.setBlock(tx, baseY + y, tz, 'wood_log', false, recordDelta);
     }
     const topY = baseY + trunkHeight;
     for (let dy = -1; dy <= 2; dy += 1) {
@@ -552,7 +947,7 @@ export class VoxelWorld {
         for (let dz = -r; dz <= r; dz += 1) {
           if (Math.abs(dx) === r && Math.abs(dz) === r && dy >= 1) continue;
           if (dx === 0 && dz === 0 && dy < 1) continue;
-          this.setBlock(tx + dx, topY + dy, tz + dz, leafType);
+          this.setBlock(tx + dx, topY + dy, tz + dz, leafType, false, recordDelta);
         }
       }
     }
@@ -560,8 +955,7 @@ export class VoxelWorld {
 
   spawnHanokHouseBlueprint(cx, baseY, cz) {
     this.beginEdit();
-    this.buildVoxelHanok(cx, baseY, cz, 7, 7, 3, false, false);
-    // Add cozy books & lantern inside
+    this.buildVoxelHanok(cx, baseY, cz, 7, 7, 3, false, false, true);
     this.setBlock(cx - 2, baseY, cz - 2, 'bookshelf');
     this.setBlock(cx + 2, baseY, cz - 2, 'bookshelf');
     this.setBlock(cx, baseY, cz - 2, 'lantern');
@@ -574,13 +968,11 @@ export class VoxelWorld {
     this.beginEdit();
     const hw = 4;
     const hd = 4;
-    // Stone base
     for (let x = cx - hw - 1; x <= cx + hw + 1; x += 1) {
       for (let z = cz - hd - 1; z <= cz + hd + 1; z += 1) {
         this.setBlock(x, baseY - 1, z, 'cobble_moss');
       }
     }
-    // 1st Floor (white_plaster + brick + glass)
     for (let y = baseY; y < baseY + 3; y += 1) {
       for (let x = cx - hw; x <= cx + hw; x += 1) {
         for (let z = cz - hd; z <= cz + hd; z += 1) {
@@ -592,17 +984,14 @@ export class VoxelWorld {
         }
       }
     }
-    // 2nd Floor Slab & Balcony
     for (let x = cx - hw; x <= cx + hw; x += 1) {
       for (let z = cz - hd; z <= cz + hd + 2; z += 1) {
         this.setBlock(x, baseY + 3, z, 'hanok_wood');
       }
     }
-    // Balcony fence
     for (let x = cx - hw; x <= cx + hw; x += 1) {
       this.setBlock(x, baseY + 4, cz + hd + 2, 'fence_post');
     }
-    // 2nd Floor Walls
     for (let y = baseY + 4; y < baseY + 7; y += 1) {
       for (let x = cx - hw; x <= cx + hw; x += 1) {
         for (let z = cz - hd; z <= cz + hd; z += 1) {
@@ -614,11 +1003,9 @@ export class VoxelWorld {
         }
       }
     }
-    // Exterior Side Stairs up to balcony
     for (let s = 0; s < 4; s += 1) {
       this.setBlock(cx + hw + 1, baseY + s, cz + s, 'hanok_wood');
     }
-    // Giwa Roof
     for (let tier = 0; tier < 2; tier += 1) {
       const rw = hw + 1 - tier;
       const rd = hd + 1 - tier;
@@ -758,7 +1145,6 @@ export class VoxelWorld {
     this.beginEdit();
     const changes = [];
 
-    // Determine cardinal facing axes relative to player
     const sinY = Math.sin(playerYaw);
     const cosY = Math.cos(playerYaw);
     const fwdX = Math.abs(sinY) >= Math.abs(cosY) ? Math.sign(sinY) || 1 : 0;
@@ -767,7 +1153,7 @@ export class VoxelWorld {
     const rightZ = fwdX;
 
     const isInsidePlayer = (bx, by, bz) => {
-      if (!playerPos) return false;
+      if (!playerPos || PLANT_IDS.has(blockId)) return false;
       const px = Math.round(playerPos.x);
       const pz = Math.round(playerPos.z);
       const py = Math.floor(playerPos.y);
@@ -783,7 +1169,7 @@ export class VoxelWorld {
     };
 
     if (toolId === 'wall3') {
-      const startY = mode === 'break' ? Math.max(1, iy - 1) : iy;
+      const startY = mode === 'break' ? Math.max(this.minY + 1, iy - 1) : iy;
       for (let dy = 0; dy < 3; dy += 1) {
         for (let s = -1; s <= 1; s += 1) {
           tryOp(ix + rightX * s, startY + dy, iz + rightZ * s);
@@ -805,8 +1191,8 @@ export class VoxelWorld {
       }
     } else if (toolId === 'doorway') {
       if (mode === 'break') {
-        tryOp(ix, Math.max(1, iy), iz);
-        tryOp(ix, Math.max(1, iy) + 1, iz);
+        tryOp(ix, Math.max(this.minY + 1, iy), iz);
+        tryOp(ix, Math.max(this.minY + 1, iy) + 1, iz);
       } else {
         tryOp(ix, iy, iz);
         tryOp(ix, iy + 1, iz);
@@ -823,22 +1209,41 @@ export class VoxelWorld {
   getTopSolidY(x, z) {
     const ix = Math.round(x);
     const iz = Math.round(z);
-    for (let y = 24; y >= 0; y -= 1) {
+    for (let y = this.maxY; y >= this.minY; y -= 1) {
       if (this.isSolid(ix, y, iz)) {
         return y;
       }
     }
-    return 0;
+    return this.minY;
   }
 
-  // Exact Voxel DDA Raycast (works for breaking & placing blocks and doors)
-  raycast(origin, dir, maxDist = 7.5) {
-    const stepSize = 0.12;
+  // Pull camera inside when a solid underground or indoor wall sits between focus point and camera
+  getCameraClipDistance(origin, target) {
+    const dx = target.x - origin.x;
+    const dy = target.y - origin.y;
+    const dz = target.z - origin.z;
+    const fullDist = Math.hypot(dx, dy, dz);
+    if (fullDist < 0.2) return fullDist;
+    const step = 0.35;
+    for (let d = 0.6; d < fullDist; d += step) {
+      const t = d / fullDist;
+      const ix = Math.round(origin.x + dx * t);
+      const iy = Math.floor(origin.y + dy * t);
+      const iz = Math.round(origin.z + dz * t);
+      if (this.isSolid(ix, iy, iz)) {
+        return Math.max(1.2, d - 0.45);
+      }
+    }
+    return fullDist;
+  }
+
+  raycast(origin, dir, maxDist = 8.5) {
+    const stepSize = 0.11;
     let prevX = Math.round(origin.x);
     let prevY = Math.floor(origin.y);
     let prevZ = Math.round(origin.z);
 
-    for (let d = 0.6; d <= maxDist; d += stepSize) {
+    for (let d = 0.55; d <= maxDist; d += stepSize) {
       const sx = origin.x + dir.x * d;
       const sy = origin.y + dir.y * d;
       const sz = origin.z + dir.z * d;
@@ -898,8 +1303,8 @@ export class VoxelWorld {
       const maxBx = Math.round(cx + radius);
       const minBz = Math.round(cz - radius);
       const maxBz = Math.round(cz + radius);
-      const minBy = Math.floor(cy + 0.15);
-      const maxBy = Math.floor(cy + height - 0.1);
+      const minBy = Math.floor(cy + 0.18);
+      const maxBy = Math.floor(cy + height - 0.08);
 
       for (let bx = minBx; bx <= maxBx; bx += 1) {
         for (let bz = minBz; bz <= maxBz; bz += 1) {
@@ -914,7 +1319,6 @@ export class VoxelWorld {
     };
 
     if (checkOverlap(nextX, y, z)) {
-      // Try auto-step up 1 block if headroom is clear
       if (!checkOverlap(nextX, y + 1.02, z)) {
         y += 1.02;
       } else {
@@ -930,17 +1334,16 @@ export class VoxelWorld {
       }
     }
 
-    // Find ground surface directly beneath player's feet footprint
     const minBx = Math.round(nextX - radius * 0.8);
     const maxBx = Math.round(nextX + radius * 0.8);
     const minBz = Math.round(nextZ - radius * 0.8);
     const maxBz = Math.round(nextZ + radius * 0.8);
     const footBlockY = Math.floor(y + 0.05);
 
-    let floorY = 1.0;
+    let floorY = this.minY + 1;
     for (let bx = minBx; bx <= maxBx; bx += 1) {
       for (let bz = minBz; bz <= maxBz; bz += 1) {
-        for (let by = footBlockY; by >= 0; by -= 1) {
+        for (let by = footBlockY; by >= this.minY; by -= 1) {
           if (this.isSolid(bx, by, bz)) {
             floorY = Math.max(floorY, by + 1);
             break;
@@ -950,5 +1353,51 @@ export class VoxelWorld {
     }
 
     return { x: nextX, y, z: nextZ, floorY };
+  }
+
+  exportWorldState() {
+    return {
+      worldRadius: this.worldRadius,
+      dugCells: Array.from(this.dugCells),
+      deltas: Array.from(this.deltas.entries()),
+    };
+  }
+
+  importWorldState(saved) {
+    if (!saved) return;
+    if (saved.worldRadius && saved.worldRadius > this.worldRadius) {
+      this.expandWorldBy(saved.worldRadius - this.worldRadius);
+    }
+    if (Array.isArray(saved.dugCells)) {
+      saved.dugCells.forEach((k) => {
+        this.dugCells.add(k);
+        const cur = this.blocks.get(k);
+        if (cur) {
+          this.blocks.delete(k);
+          this.dirtyTypes.add(cur);
+        }
+      });
+    }
+    if (Array.isArray(saved.deltas)) {
+      saved.deltas.forEach(([k, val]) => {
+        this.deltas.set(k, val);
+        const cur = this.blocks.get(k);
+        if (cur) this.dirtyTypes.add(cur);
+        if (val === null) {
+          this.blocks.delete(k);
+          this.dugCells.add(k);
+        } else if (this.batches[val]) {
+          this.blocks.set(k, val);
+          this.dugCells.delete(k);
+          this.dirtyTypes.add(val);
+        }
+      });
+    }
+    // Re-reveal subterranean neighbor walls around dug cells
+    this.dugCells.forEach((k) => {
+      const [x, y, z] = k.split(',').map(Number);
+      if (y <= 1) this.revealSubterraneanAround(x, y, z);
+    });
+    this.flushBatches();
   }
 }
